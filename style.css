@@ -109,10 +109,75 @@ body {
   font-weight: 600;
   color: var(--text-light);
   margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.level-progress-block {
+  margin-top: 6px;
   max-width: 220px;
+}
+
+.level-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--green-600);
+}
+
+.level-progress-pct {
+  color: var(--green-500);
+}
+
+.level-progress-bar {
+  height: 8px;
+  background: var(--green-100);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.level-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green-400), var(--green-300));
+  border-radius: 8px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(61, 184, 122, 0.45);
+}
+
+.daily-goal {
+  padding: 10px 14px;
+  margin-bottom: 4px;
+  border-left: 3px solid var(--green-400);
+  transition: var(--transition);
+}
+
+.daily-goal--done {
+  border-left-color: var(--green-500);
+  background: rgba(212, 240, 226, 0.5);
+}
+
+.daily-goal__header {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--green-600);
+  margin-bottom: 4px;
+}
+
+.daily-goal__text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.daily-goal__status {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--green-500);
 }
 
 .header-right {
@@ -604,12 +669,14 @@ body {
 
 .product-card {
   flex-shrink: 0;
-  width: 80px;
+  width: 84px;
+  min-height: 108px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: 4px;
-  padding: 10px 8px;
+  padding: 10px 6px 8px;
   background: rgba(240, 250, 245, 0.9);
   border-radius: var(--radius-sm);
   border: 2px solid transparent;
@@ -639,21 +706,33 @@ body {
   height: 44px;
   object-fit: contain;
   pointer-events: none;
+  flex-shrink: 0;
 }
 
 .product-card .product-name {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   text-align: center;
   color: var(--text);
-  line-height: 1.2;
+  line-height: 1.25;
   pointer-events: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  hyphens: auto;
+  width: 100%;
+  min-height: 2.5em;
 }
 
 .product-card .product-category {
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   color: var(--text-light);
   pointer-events: none;
+  margin-top: auto;
+  line-height: 1.2;
+  text-align: center;
 }
 
 .product-card.cat-vegetables { border-bottom: 3px solid var(--veg-color); }
@@ -1240,7 +1319,38 @@ body {
 .achievements-panel__sub {
   font-size: 0.82rem;
   color: var(--text-light);
+  margin-bottom: 8px;
+}
+
+.achievements-panel__bar {
+  height: 6px;
+  background: var(--green-100);
+  border-radius: 6px;
+  overflow: hidden;
   margin-bottom: 14px;
+}
+
+.achievements-panel__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green-400), var(--green-300));
+  border-radius: 6px;
+  transition: width 0.5s ease;
+  box-shadow: 0 0 8px rgba(61, 184, 122, 0.4);
+}
+
+.achievement-card__locked-label {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.65rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.victory-subtitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--green-500);
+  margin-bottom: 8px;
 }
 
 .achievements-grid {
@@ -1565,9 +1675,17 @@ body {
     font-size: 0.85rem;
   }
 
-  .level-name {
-    max-width: 180px;
-    font-size: 0.68rem;
+  .level-progress-block {
+    max-width: 100%;
+  }
+
+  .daily-goal {
+    padding: 8px 12px;
+  }
+
+  .product-card {
+    width: 76px;
+    min-height: 102px;
   }
 
   .daily-quote {

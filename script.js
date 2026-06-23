@@ -60,22 +60,21 @@ const LEVELS = [
 ];
 
 const ACHIEVEMENTS = [
-  { id: 'novice', icon: '🥉', title: 'Новичок питания', desc: 'Получить 100 очков', type: 'score', value: 100 },
-  { id: 'helper', icon: '🥈', title: 'ЗОЖ-помощник', desc: 'Получить 300 очков', type: 'score', value: 300 },
-  { id: 'expert', icon: '🥇', title: 'Эксперт здоровой тарелки', desc: 'Получить 500 очков', type: 'score', value: 500 },
-  { id: 'master', icon: '👑', title: 'Мастер Нариеллы', desc: 'Получить 1000 очков', type: 'score', value: 1000 },
-  { id: 'firstPerfect', icon: '🥗', title: 'Собрал первую идеальную тарелку', desc: 'Набрать 90+ очков за раунд', type: 'perfect' },
-  { id: 'vegLover', icon: '🥬', title: 'Любитель овощей', desc: '5 успешных тарелок подряд', type: 'streak', value: 5 },
-  { id: 'proteinExpert', icon: '🐟', title: 'Белковый эксперт', desc: '10 успешных тарелок', type: 'totalSuccess', value: 10 },
-  { id: 'mediterranean', icon: '🌿', title: 'Средиземноморский герой', desc: 'Пройти уровень «Средиземноморская тарелка»', type: 'level', value: 4 },
+  { id: 'firstPlate', icon: '🥗', title: 'Первая тарелка', desc: 'Собрать первую правильную тарелку', type: 'firstSuccess' },
+  { id: 'vegLover', icon: '🥦', title: 'Любитель овощей', desc: 'Собрать 10 овощных тарелок', type: 'vegPlates', value: 10 },
+  { id: 'fishExpert', icon: '🐟', title: 'Рыбный эксперт', desc: 'Успешно использовать рыбу 5 раз', type: 'fishSuccess', value: 5 },
+  { id: 'fastStart', icon: '⚡', title: 'Быстрый старт', desc: 'Пройти уровень быстрее чем за 20 секунд', type: 'fastLevel', value: 20 },
+  { id: 'master', icon: '🏆', title: 'Мастер здоровой тарелки', desc: 'Пройти все уровни', type: 'allLevels' },
 ];
 
-const RANKS = [
-  { min: 1000, icon: '👑', title: 'Мастер Нариеллы' },
-  { min: 500, icon: '🥇', title: 'Эксперт' },
-  { min: 200, icon: '🥈', title: 'ЗОЖ-помощник' },
-  { min: 0, icon: '🥉', title: 'Новичок' },
+const DAILY_GOALS_POOL = [
+  { id: 'veg3', text: 'Собери тарелку с 3 овощами' },
+  { id: 'fish', text: 'Используй рыбу' },
+  { id: 'flawless', text: 'Пройди уровень без ошибок' },
+  { id: 'score100', text: 'Получи 100 очков' },
 ];
+
+const DAILY_GOAL_BONUS = 50;
 
 const DAILY_QUOTES = [
   'Каждая полезная тарелка — шаг к здоровью.',
@@ -99,14 +98,21 @@ const state = {
   checked: false,
   soundEnabled: true,
   achievements: [],
+  achievementDates: {},
   discoveredProducts: [],
+  dailyGoal: { date: '', goalId: '', completed: false },
+  levelRoundFailures: 0,
   stats: {
     totalChecks: 0,
     successfulChecks: 0,
     successStreak: 0,
     bestTimeLeft: 0,
+    bestElapsed: null,
     highScore: 0,
     levelsCompleted: [],
+    vegPlates: 0,
+    fishSuccessCount: 0,
+    successRate: 0,
   },
   roundStartTime: 0,
 };
@@ -119,6 +125,12 @@ const dom = {
   score: $('#score'),
   level: $('#level'),
   levelName: $('#level-name'),
+  levelProgressLabel: $('#level-progress-label'),
+  levelProgressPct: $('#level-progress-pct'),
+  levelProgressFill: $('#level-progress-fill'),
+  dailyGoalText: $('#daily-goal-text'),
+  dailyGoalStatus: $('#daily-goal-status'),
+  dailyGoalCard: $('#daily-goal'),
   plate: $('#plate'),
   plateItems: $('#plate-items'),
   plateHint: $('#plate-hint'),
@@ -151,14 +163,14 @@ const dom = {
   achievementsClose: $('#achievements-close'),
   achievementsCount: $('#achievements-count'),
   achievementsProgress: $('#achievements-progress'),
+  achievementsPanelFill: $('#achievements-panel-fill'),
   victoryScreen: $('#victory-screen'),
   confettiCanvas: $('#confetti-canvas'),
   victoryScore: $('#victory-score'),
+  victoryLevel: $('#victory-level'),
+  victoryPlates: $('#victory-plates'),
   victoryAchievements: $('#victory-achievements'),
-  victoryProducts: $('#victory-products'),
   victoryTime: $('#victory-time'),
-  victoryRate: $('#victory-rate'),
-  victoryRank: $('#victory-rank'),
   victoryReplay: $('#victory-replay'),
   victoryAchievementsBtn: $('#victory-achievements'),
   victoryEncyclopedia: $('#victory-encyclopedia'),
@@ -230,8 +242,10 @@ function saveProgress() {
       score: state.score,
       level: state.level,
       achievements: state.achievements,
+      achievementDates: state.achievementDates,
       discoveredProducts: state.discoveredProducts,
       soundEnabled: state.soundEnabled,
+      dailyGoal: state.dailyGoal,
       stats: state.stats,
     }));
     updateAchievementsCount();
@@ -246,7 +260,9 @@ function loadProgress() {
     state.score = data.score || 0;
     state.level = Math.min(Math.max(data.level || 1, 1), LEVELS.length);
     state.achievements = data.achievements || [];
+    state.achievementDates = data.achievementDates || {};
     state.discoveredProducts = data.discoveredProducts || [];
+    if (data.dailyGoal) state.dailyGoal = data.dailyGoal;
     if (typeof data.soundEnabled === 'boolean') state.soundEnabled = data.soundEnabled;
     if (data.stats) {
       state.stats = { ...state.stats, ...data.stats };
@@ -259,11 +275,13 @@ function init() {
   loadProgress();
   updateSoundBtn();
   setDailyQuote();
+  initDailyGoal();
   updateLevelUI();
   renderProducts();
   bindEvents();
   updateUI();
   updateAchievementsCount();
+  updateDailyGoalUI();
 }
 
 function bindEvents() {
@@ -314,7 +332,14 @@ function getLevelConfig() {
 
 function updateLevelUI() {
   const cfg = getLevelConfig();
-  dom.levelName.textContent = 'Уровень ' + state.level + ' — ' + cfg.name;
+  const total = LEVELS.length;
+  const pct = Math.round((state.level / total) * 100);
+  dom.levelName.textContent = cfg.name;
+  dom.levelProgressLabel.textContent = 'Уровень ' + state.level + ' из ' + total;
+  dom.levelProgressPct.textContent = pct + '%';
+  dom.levelProgressFill.style.width = pct + '%';
+  const bar = dom.levelProgressFill.parentElement;
+  if (bar) bar.setAttribute('aria-valuenow', pct);
   const t = cfg.target;
   dom.plateGuide.innerHTML =
     '<div class="guide-segment guide-veg">🥬 ' + t.vegetables + '%</div>' +
@@ -322,8 +347,74 @@ function updateLevelUI() {
     '<div class="guide-segment guide-carbs">🌾 ' + t.carbs + '%</div>';
 }
 
+/* ===== Цель дня ===== */
+function getTodayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function initDailyGoal() {
+  const today = getTodayKey();
+  if (state.dailyGoal.date !== today || !state.dailyGoal.goalId) {
+    const goal = DAILY_GOALS_POOL[Math.floor(Math.random() * DAILY_GOALS_POOL.length)];
+    state.dailyGoal = { date: today, goalId: goal.id, completed: false };
+    saveProgress();
+  }
+}
+
+function getDailyGoalDef() {
+  return DAILY_GOALS_POOL.find((g) => g.id === state.dailyGoal.goalId) || DAILY_GOALS_POOL[0];
+}
+
+function updateDailyGoalUI() {
+  const goal = getDailyGoalDef();
+  if (!goal) return;
+  if (state.dailyGoal.completed) {
+    dom.dailyGoalText.textContent = goal.text;
+    dom.dailyGoalStatus.textContent = '✓ Цель выполнена · +' + DAILY_GOAL_BONUS + ' очков';
+    dom.dailyGoalStatus.classList.remove('hidden');
+    dom.dailyGoalCard.classList.add('daily-goal--done');
+  } else {
+    dom.dailyGoalText.textContent = goal.text;
+    dom.dailyGoalStatus.classList.add('hidden');
+    dom.dailyGoalCard.classList.remove('daily-goal--done');
+  }
+}
+
+function checkDailyGoal(plate, ctx) {
+  if (state.dailyGoal.completed) return;
+  const id = state.dailyGoal.goalId;
+  let done = false;
+  if (id === 'veg3') {
+    done = plate.filter((p) => p.category === 'vegetables').length >= 3;
+  } else if (id === 'fish') {
+    done = plate.some((p) => p.id === 'fish');
+  } else if (id === 'flawless') {
+    done = ctx.flawlessLevel;
+  } else if (id === 'score100') {
+    done = state.score >= 100;
+  }
+  if (done) {
+    state.dailyGoal.completed = true;
+    state.score += DAILY_GOAL_BONUS;
+    saveProgress();
+    updateUI();
+    updateDailyGoalUI();
+    showToast('✓ Цель дня выполнена! +' + DAILY_GOAL_BONUS + ' очков', 'achievement');
+    playSound('points');
+    showScoreFloat('+' + DAILY_GOAL_BONUS, true);
+  }
+}
+
+function formatAchDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear();
+}
+
 function startGame() {
   hideStartScreen(() => {
+    state.levelRoundFailures = 0;
     resetRound();
     state.isPlaying = true;
     startTimer();
@@ -539,6 +630,7 @@ function checkPlate() {
   const config = getLevelConfig();
 
   if (state.plate.length < config.minItems) {
+    state.levelRoundFailures++;
     setNariellaMessage('Добавь ещё продуктов! Нужно минимум <strong>' + config.minItems + '</strong>.');
     dom.plate.classList.add('shake');
     playSound('error');
@@ -549,6 +641,7 @@ function checkPlate() {
 
   const levelCheck = checkLevelRequirements(config);
   if (!levelCheck.ok) {
+    state.levelRoundFailures++;
     setNariellaMessage(levelCheck.message);
     dom.plate.classList.add('shake');
     playSound('error');
@@ -562,7 +655,6 @@ function checkPlate() {
   displayResult(result);
 
   const roundScore = result.score;
-  const prevScore = state.score;
   const isSuccess = roundScore >= config.targetScore;
 
   state.stats.totalChecks++;
@@ -572,23 +664,39 @@ function checkPlate() {
     if (state.timeLeft > state.stats.bestTimeLeft) {
       state.stats.bestTimeLeft = state.timeLeft;
     }
+    const elapsedSec = config.time - state.timeLeft;
+    if (state.stats.bestElapsed === null || elapsedSec < state.stats.bestElapsed) {
+      state.stats.bestElapsed = elapsedSec;
+    }
+    const vegCount = state.plate.filter((p) => p.category === 'vegetables').length;
+    if (vegCount >= 3) state.stats.vegPlates++;
+    if (state.plate.some((p) => p.id === 'fish')) state.stats.fishSuccessCount++;
   } else {
     state.stats.successStreak = 0;
+    state.levelRoundFailures++;
   }
+  state.stats.successRate = state.stats.totalChecks
+    ? Math.round((state.stats.successfulChecks / state.stats.totalChecks) * 100)
+    : 0;
 
   state.score += roundScore;
   updateUI();
   dom.scoreStat.classList.add('score-bump');
   setTimeout(() => dom.scoreStat.classList.remove('score-bump'), 500);
-  saveProgress();
 
+  const elapsed = config.time - state.timeLeft;
+  const flawlessLevel = isSuccess && state.levelRoundFailures === 0;
   const unlockCtx = {
     roundScore,
     isSuccess,
     levelId: config.id,
-    isPerfect: roundScore >= 90,
+    elapsed,
+    flawlessLevel,
+    plate: state.plate,
   };
-  checkAchievements(prevScore, unlockCtx);
+  checkAchievements(unlockCtx);
+  if (isSuccess) checkDailyGoal(state.plate, unlockCtx);
+  saveProgress();
 
   if (isSuccess) {
     dom.plate.classList.add('plate--success');
@@ -753,26 +861,28 @@ function updateLiveAdvice() {
 /* ===== Достижения ===== */
 function checkAchievementCondition(ach, ctx) {
   switch (ach.type) {
-    case 'score': return state.score >= ach.value;
-    case 'perfect': return ctx.isPerfect;
-    case 'streak': return state.stats.successStreak >= ach.value;
-    case 'totalSuccess': return state.stats.successfulChecks >= ach.value;
-    case 'level': return ctx.levelId === ach.value && ctx.isSuccess;
+    case 'firstSuccess': return ctx.isSuccess && state.stats.successfulChecks >= 1;
+    case 'vegPlates': return state.stats.vegPlates >= ach.value;
+    case 'fishSuccess': return state.stats.fishSuccessCount >= ach.value;
+    case 'fastLevel': return ctx.isSuccess && ctx.elapsed <= ach.value;
+    case 'allLevels': return state.stats.levelsCompleted.length >= LEVELS.length;
     default: return false;
   }
 }
 
-function checkAchievements(prevScore, ctx) {
+function checkAchievements(ctx) {
   const unlocked = [];
   ACHIEVEMENTS.forEach((ach) => {
     if (state.achievements.includes(ach.id)) return;
     if (checkAchievementCondition(ach, ctx)) {
       state.achievements.push(ach.id);
+      state.achievementDates[ach.id] = new Date().toISOString();
       unlocked.push(ach);
     }
   });
   if (unlocked.length) {
     saveProgress();
+    updateAchievementsCount();
     unlocked.forEach((ach, i) => {
       setTimeout(() => {
         playSound('achievement');
@@ -797,51 +907,51 @@ function showAchievementToast(ach) {
 function updateAchievementsCount() {
   const count = state.achievements.length;
   const total = ACHIEVEMENTS.length;
+  const pct = total ? Math.round((count / total) * 100) : 0;
   if (dom.achievementsCount) dom.achievementsCount.textContent = count;
   if (dom.achievementsProgress) {
-    dom.achievementsProgress.textContent = count + ' из ' + total + ' открыто';
+    dom.achievementsProgress.textContent = count + ' из ' + total + ' · ' + pct + '%';
   }
+  if (dom.achievementsPanelFill) dom.achievementsPanelFill.style.width = pct + '%';
 }
 
 function openAchievementsPanel() {
   dom.achievementsGrid.innerHTML = ACHIEVEMENTS.map((ach) => {
     const unlocked = state.achievements.includes(ach.id);
+    const dateStr = unlocked && state.achievementDates[ach.id]
+      ? formatAchDate(state.achievementDates[ach.id])
+      : '';
     return '<article class="achievement-card' + (unlocked ? ' achievement-card--unlocked' : ' achievement-card--locked') + '">' +
       '<div class="achievement-card__icon">' + (unlocked ? ach.icon : '🔒') + '</div>' +
       '<h3>' + ach.title + '</h3>' +
       '<p>' + ach.desc + '</p>' +
-      (unlocked ? '<span class="achievement-card__badge">Получено</span>' : '') +
+      (unlocked
+        ? '<span class="achievement-card__badge">Получено' + (dateStr ? ' · ' + dateStr : '') + '</span>'
+        : '<span class="achievement-card__locked-label">Заблокировано</span>') +
     '</article>';
   }).join('');
   updateAchievementsCount();
   dom.achievementModal.classList.remove('hidden');
 }
 
-function getPlayerRank(score) {
-  for (let i = 0; i < RANKS.length; i++) {
-    if (score >= RANKS[i].min) return RANKS[i];
-  }
-  return RANKS[RANKS.length - 1];
-}
-
 function getSuccessRate() {
-  if (!state.stats.totalChecks) return 0;
-  return Math.round((state.stats.successfulChecks / state.stats.totalChecks) * 100);
+  return state.stats.successRate || 0;
 }
 
 /* ===== Экран победы ===== */
 function showVictoryScreen() {
   state.isPlaying = false;
   clearInterval(state.timerId);
+  checkAchievements({ isSuccess: true, levelId: LEVELS.length, elapsed: 0, flawlessLevel: state.levelRoundFailures === 0, roundScore: 0, plate: [] });
   saveProgress();
 
-  const rank = getPlayerRank(state.score);
-  dom.victoryRank.innerHTML = '<span class="victory-rank__icon">' + rank.icon + '</span><span class="victory-rank__title">' + rank.title + '</span>';
   dom.victoryScore.textContent = state.score;
+  dom.victoryLevel.textContent = LEVELS.length;
+  dom.victoryTime.textContent = state.stats.bestElapsed !== null
+    ? state.stats.bestElapsed + ' сек'
+    : '—';
+  dom.victoryPlates.textContent = state.stats.successfulChecks;
   dom.victoryAchievements.textContent = state.achievements.length + ' / ' + ACHIEVEMENTS.length;
-  dom.victoryProducts.textContent = state.discoveredProducts.length + ' / ' + PRODUCTS.length;
-  dom.victoryTime.textContent = state.stats.bestTimeLeft ? state.stats.bestTimeLeft + ' сек' : '—';
-  dom.victoryRate.textContent = getSuccessRate() + '%';
 
   dom.victoryScreen.classList.remove('hidden');
   dom.victoryScreen.setAttribute('aria-hidden', 'false');
@@ -863,19 +973,26 @@ function restartGame() {
   hideVictoryScreen();
   state.score = 0;
   state.level = 1;
+  state.levelRoundFailures = 0;
   state.stats = {
     totalChecks: 0,
     successfulChecks: 0,
     successStreak: 0,
     bestTimeLeft: 0,
+    bestElapsed: null,
     highScore: state.stats.highScore,
     levelsCompleted: [],
+    vegPlates: 0,
+    fishSuccessCount: 0,
+    successRate: 0,
   };
+  initDailyGoal();
   saveProgress();
   showStartScreen();
   resetRound();
   updateUI();
   updateLevelUI();
+  updateDailyGoalUI();
 }
 
 function startConfetti() {
@@ -951,17 +1068,30 @@ function openEncyclopedia() {
 /* ===== Уровни ===== */
 function nextLevel() {
   const completedLevel = state.level;
+  const cfg = getLevelConfig();
+  const elapsed = cfg.time - state.timeLeft;
   if (!state.stats.levelsCompleted.includes(completedLevel)) {
     state.stats.levelsCompleted.push(completedLevel);
   }
+  checkAchievements({
+    isSuccess: true,
+    levelId: completedLevel,
+    elapsed,
+    flawlessLevel: state.levelRoundFailures === 0,
+    roundScore: 0,
+    plate: [],
+  });
+  if (state.dailyGoal.goalId === 'flawless' && state.levelRoundFailures === 0) {
+    checkDailyGoal([], { flawlessLevel: true, roundScore: 0 });
+  }
   state.level++;
+  state.levelRoundFailures = 0;
   saveProgress();
   updateLevelUI();
-  const cfg = getLevelConfig();
-  checkAchievements(state.score, { isSuccess: true, levelId: completedLevel, roundScore: 0, isPerfect: false });
+  const newCfg = getLevelConfig();
   setNariellaMessage(
-    '<strong>Уровень ' + state.level + ': ' + cfg.name + '</strong><br>' +
-    cfg.hint + '<br>Цель — <strong>' + cfg.targetScore + '</strong> очков за ' + cfg.time + ' сек.'
+    '<strong>Уровень ' + state.level + ': ' + newCfg.name + '</strong><br>' +
+    newCfg.hint + '<br>Цель — <strong>' + newCfg.targetScore + '</strong> очков за ' + newCfg.time + ' сек.'
   );
   resetRound();
   updateUI();

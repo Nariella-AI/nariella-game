@@ -18,7 +18,16 @@
         </div>
         <div>
           <h1>Нариелла: Секрет здоровой тарелки</h1>
-          <p id="level-name" class="level-name">Уровень 1 — Классическая здоровая тарелка</p>
+          <p id="level-name" class="level-name">Классическая здоровая тарелка</p>
+          <div class="level-progress-block">
+            <div class="level-progress-header">
+              <span id="level-progress-label">Уровень 1 из 5</span>
+              <span id="level-progress-pct" class="level-progress-pct">20%</span>
+            </div>
+            <div class="level-progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+              <div id="level-progress-fill" class="level-progress-fill" style="width:20%"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="header-right">
@@ -46,6 +55,12 @@
         </div>
       </div>
     </header>
+
+    <div id="daily-goal" class="daily-goal glass-panel">
+      <div class="daily-goal__header">🌿 Цель дня</div>
+      <p id="daily-goal-text" class="daily-goal__text"></p>
+      <p id="daily-goal-status" class="daily-goal__status hidden"></p>
+    </div>
 
     <p id="daily-quote" class="daily-quote glass-panel"></p>
 
@@ -127,7 +142,10 @@
         <h2>🏆 Достижения</h2>
         <button id="achievements-close" class="btn-close" type="button" aria-label="Закрыть">✕</button>
       </div>
-      <p class="achievements-panel__sub" id="achievements-progress">0 из 8 открыто</p>
+      <p class="achievements-panel__sub" id="achievements-progress">0 из 5 · 0%</p>
+      <div class="achievements-panel__bar">
+        <div id="achievements-panel-fill" class="achievements-panel__fill" style="width:0%"></div>
+      </div>
       <div id="achievements-grid" class="achievements-grid"></div>
     </div>
   </div>
@@ -140,19 +158,19 @@
         <span class="victory-emoji">🎉</span>
         <h2>🏆 Поздравляем!</h2>
       </div>
+      <p class="victory-subtitle">Ты прошёл курс Нариеллы</p>
       <p class="victory-text">Ты помог Нариелле раскрыть секрет здоровой тарелки и освоил основы здорового питания!</p>
-      <div id="victory-rank" class="victory-rank"></div>
       <div class="victory-stats">
-        <div class="victory-stat"><span>⭐</span><div><small>Общие очки</small><strong id="victory-score">0</strong></div></div>
-        <div class="victory-stat"><span>🏆</span><div><small>Достижения</small><strong id="victory-achievements">0</strong></div></div>
-        <div class="victory-stat"><span>📖</span><div><small>Открытые продукты</small><strong id="victory-products">0</strong></div></div>
+        <div class="victory-stat"><span>⭐</span><div><small>Очки</small><strong id="victory-score">0</strong></div></div>
+        <div class="victory-stat"><span>📊</span><div><small>Уровень</small><strong id="victory-level">5</strong></div></div>
         <div class="victory-stat"><span>⏱</span><div><small>Лучшее время</small><strong id="victory-time">—</strong></div></div>
-        <div class="victory-stat victory-stat--wide"><span>📈</span><div><small>Успешных тарелок</small><strong id="victory-rate">0%</strong></div></div>
+        <div class="victory-stat"><span>🥗</span><div><small>Правильных тарелок</small><strong id="victory-plates">0</strong></div></div>
+        <div class="victory-stat victory-stat--wide"><span>🏆</span><div><small>Полученные достижения</small><strong id="victory-achievements">0</strong></div></div>
       </div>
       <div class="victory-actions">
         <button id="victory-replay" class="btn-victory btn-victory--primary" type="button">🔄 Играть снова</button>
-        <button id="victory-achievements" class="btn-victory" type="button">📖 Посмотреть достижения</button>
-        <button id="victory-encyclopedia" class="btn-victory" type="button">🥗 Открыть энциклопедию</button>
+        <button id="victory-achievements" class="btn-victory" type="button">🏆 Мои достижения</button>
+        <button id="victory-encyclopedia" class="btn-victory" type="button">📖 Энциклопедия продуктов</button>
       </div>
     </div>
   </div>
