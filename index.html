@@ -31,8 +31,12 @@
             <span class="stat-icon">⭐</span>
             <span id="score" class="stat-value">0</span>
           </div>
-          <div class="stat-item">
+          <button id="achievements-btn" class="stat-item stat-item--btn" type="button" title="Достижения">
             <span class="stat-icon">🏆</span>
+            <span id="achievements-count" class="stat-value">0</span>
+          </button>
+          <div class="stat-item">
+            <span class="stat-icon">📊</span>
             <span id="level" class="stat-value">1</span>
           </div>
         </div>
@@ -118,11 +122,38 @@
   </div>
 
   <div id="achievement-modal" class="modal hidden">
-    <div class="modal-content glass-card achievement-modal">
-      <div id="achievement-icon" class="modal-icon">🥉</div>
-      <h2 id="achievement-title">Достижение!</h2>
-      <p id="achievement-text"></p>
-      <button id="achievement-btn" class="btn-modal">Ура!</button>
+    <div class="modal-content glass-card achievements-panel">
+      <div class="achievements-panel__header">
+        <h2>🏆 Достижения</h2>
+        <button id="achievements-close" class="btn-close" type="button" aria-label="Закрыть">✕</button>
+      </div>
+      <p class="achievements-panel__sub" id="achievements-progress">0 из 8 открыто</p>
+      <div id="achievements-grid" class="achievements-grid"></div>
+    </div>
+  </div>
+
+  <div id="victory-screen" class="victory-screen hidden" aria-hidden="true">
+    <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+    <div class="victory-screen__backdrop"></div>
+    <div class="victory-card glass-card">
+      <div class="victory-card__top">
+        <span class="victory-emoji">🎉</span>
+        <h2>🏆 Поздравляем!</h2>
+      </div>
+      <p class="victory-text">Ты помог Нариелле раскрыть секрет здоровой тарелки и освоил основы здорового питания!</p>
+      <div id="victory-rank" class="victory-rank"></div>
+      <div class="victory-stats">
+        <div class="victory-stat"><span>⭐</span><div><small>Общие очки</small><strong id="victory-score">0</strong></div></div>
+        <div class="victory-stat"><span>🏆</span><div><small>Достижения</small><strong id="victory-achievements">0</strong></div></div>
+        <div class="victory-stat"><span>📖</span><div><small>Открытые продукты</small><strong id="victory-products">0</strong></div></div>
+        <div class="victory-stat"><span>⏱</span><div><small>Лучшее время</small><strong id="victory-time">—</strong></div></div>
+        <div class="victory-stat victory-stat--wide"><span>📈</span><div><small>Успешных тарелок</small><strong id="victory-rate">0%</strong></div></div>
+      </div>
+      <div class="victory-actions">
+        <button id="victory-replay" class="btn-victory btn-victory--primary" type="button">🔄 Играть снова</button>
+        <button id="victory-achievements" class="btn-victory" type="button">📖 Посмотреть достижения</button>
+        <button id="victory-encyclopedia" class="btn-victory" type="button">🥗 Открыть энциклопедию</button>
+      </div>
     </div>
   </div>
 

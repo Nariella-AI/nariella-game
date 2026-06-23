@@ -60,10 +60,21 @@ const LEVELS = [
 ];
 
 const ACHIEVEMENTS = [
-  { id: 'novice', icon: '🥉', title: 'Новичок питания', score: 100, text: 'Ты набрал 100 очков!' },
-  { id: 'helper', icon: '🥈', title: 'ЗОЖ-помощник', score: 300, text: 'Ты набрал 300 очков!' },
-  { id: 'expert', icon: '🥇', title: 'Эксперт здоровой тарелки', score: 500, text: 'Ты набрал 500 очков!' },
-  { id: 'master', icon: '👑', title: 'Мастер Нариеллы', score: 1000, text: 'Ты набрал 1000 очков!' },
+  { id: 'novice', icon: '🥉', title: 'Новичок питания', desc: 'Получить 100 очков', type: 'score', value: 100 },
+  { id: 'helper', icon: '🥈', title: 'ЗОЖ-помощник', desc: 'Получить 300 очков', type: 'score', value: 300 },
+  { id: 'expert', icon: '🥇', title: 'Эксперт здоровой тарелки', desc: 'Получить 500 очков', type: 'score', value: 500 },
+  { id: 'master', icon: '👑', title: 'Мастер Нариеллы', desc: 'Получить 1000 очков', type: 'score', value: 1000 },
+  { id: 'firstPerfect', icon: '🥗', title: 'Собрал первую идеальную тарелку', desc: 'Набрать 90+ очков за раунд', type: 'perfect' },
+  { id: 'vegLover', icon: '🥬', title: 'Любитель овощей', desc: '5 успешных тарелок подряд', type: 'streak', value: 5 },
+  { id: 'proteinExpert', icon: '🐟', title: 'Белковый эксперт', desc: '10 успешных тарелок', type: 'totalSuccess', value: 10 },
+  { id: 'mediterranean', icon: '🌿', title: 'Средиземноморский герой', desc: 'Пройти уровень «Средиземноморская тарелка»', type: 'level', value: 4 },
+];
+
+const RANKS = [
+  { min: 1000, icon: '👑', title: 'Мастер Нариеллы' },
+  { min: 500, icon: '🥇', title: 'Эксперт' },
+  { min: 200, icon: '🥈', title: 'ЗОЖ-помощник' },
+  { min: 0, icon: '🥉', title: 'Новичок' },
 ];
 
 const DAILY_QUOTES = [
@@ -89,6 +100,15 @@ const state = {
   soundEnabled: true,
   achievements: [],
   discoveredProducts: [],
+  stats: {
+    totalChecks: 0,
+    successfulChecks: 0,
+    successStreak: 0,
+    bestTimeLeft: 0,
+    highScore: 0,
+    levelsCompleted: [],
+  },
+  roundStartTime: 0,
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -126,10 +146,22 @@ const dom = {
   scoreFloat: $('#score-float'),
   toastContainer: $('#toast-container'),
   achievementModal: $('#achievement-modal'),
-  achievementIcon: $('#achievement-icon'),
-  achievementTitle: $('#achievement-title'),
-  achievementText: $('#achievement-text'),
-  achievementBtn: $('#achievement-btn'),
+  achievementsGrid: $('#achievements-grid'),
+  achievementsBtn: $('#achievements-btn'),
+  achievementsClose: $('#achievements-close'),
+  achievementsCount: $('#achievements-count'),
+  achievementsProgress: $('#achievements-progress'),
+  victoryScreen: $('#victory-screen'),
+  confettiCanvas: $('#confetti-canvas'),
+  victoryScore: $('#victory-score'),
+  victoryAchievements: $('#victory-achievements'),
+  victoryProducts: $('#victory-products'),
+  victoryTime: $('#victory-time'),
+  victoryRate: $('#victory-rate'),
+  victoryRank: $('#victory-rank'),
+  victoryReplay: $('#victory-replay'),
+  victoryAchievementsBtn: $('#victory-achievements'),
+  victoryEncyclopedia: $('#victory-encyclopedia'),
   encyclopediaModal: $('#encyclopedia-modal'),
   encyclopediaList: $('#encyclopedia-list'),
   encyclopediaBtn: $('#encyclopedia-btn'),
@@ -141,6 +173,7 @@ const dom = {
 let audioCtx = null;
 let dragGhost = null;
 let dragProduct = null;
+let confettiAnimId = null;
 
 /* ===== Звук (Web Audio API) ===== */
 function getAudio() {
@@ -192,13 +225,16 @@ function updateSoundBtn() {
 /* ===== Сохранение ===== */
 function saveProgress() {
   try {
+    if (state.score > state.stats.highScore) state.stats.highScore = state.score;
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       score: state.score,
       level: state.level,
       achievements: state.achievements,
       discoveredProducts: state.discoveredProducts,
       soundEnabled: state.soundEnabled,
+      stats: state.stats,
     }));
+    updateAchievementsCount();
   } catch (_) { /* ignore */ }
 }
 
@@ -212,6 +248,9 @@ function loadProgress() {
     state.achievements = data.achievements || [];
     state.discoveredProducts = data.discoveredProducts || [];
     if (typeof data.soundEnabled === 'boolean') state.soundEnabled = data.soundEnabled;
+    if (data.stats) {
+      state.stats = { ...state.stats, ...data.stats };
+    }
   } catch (_) { /* ignore */ }
 }
 
@@ -224,15 +263,26 @@ function init() {
   renderProducts();
   bindEvents();
   updateUI();
+  updateAchievementsCount();
 }
 
 function bindEvents() {
   dom.startBtn.addEventListener('click', startGame);
   dom.checkBtn.addEventListener('click', checkPlate);
   dom.modalBtn.addEventListener('click', () => dom.modal.classList.add('hidden'));
-  dom.achievementBtn.addEventListener('click', () => dom.achievementModal.classList.add('hidden'));
+  dom.achievementsBtn.addEventListener('click', openAchievementsPanel);
+  dom.achievementsClose.addEventListener('click', () => dom.achievementModal.classList.add('hidden'));
   dom.encyclopediaBtn.addEventListener('click', openEncyclopedia);
   dom.encyclopediaClose.addEventListener('click', () => dom.encyclopediaModal.classList.add('hidden'));
+  dom.victoryReplay.addEventListener('click', restartGame);
+  dom.victoryAchievementsBtn.addEventListener('click', () => {
+    hideVictoryScreen();
+    openAchievementsPanel();
+  });
+  dom.victoryEncyclopedia.addEventListener('click', () => {
+    hideVictoryScreen();
+    openEncyclopedia();
+  });
   dom.soundBtn.addEventListener('click', () => {
     state.soundEnabled = !state.soundEnabled;
     updateSoundBtn();
@@ -319,6 +369,7 @@ function resetRound() {
   state.plate = [];
   state.checked = false;
   state.timeLeft = getLevelConfig().time;
+  state.roundStartTime = Date.now();
   dom.resultPanel.classList.add('hidden');
   dom.checkBtn.disabled = true;
   dom.plate.classList.remove('plate--success', 'shake');
@@ -512,22 +563,47 @@ function checkPlate() {
 
   const roundScore = result.score;
   const prevScore = state.score;
+  const isSuccess = roundScore >= config.targetScore;
+
+  state.stats.totalChecks++;
+  if (isSuccess) {
+    state.stats.successfulChecks++;
+    state.stats.successStreak++;
+    if (state.timeLeft > state.stats.bestTimeLeft) {
+      state.stats.bestTimeLeft = state.timeLeft;
+    }
+  } else {
+    state.stats.successStreak = 0;
+  }
+
   state.score += roundScore;
   updateUI();
   dom.scoreStat.classList.add('score-bump');
   setTimeout(() => dom.scoreStat.classList.remove('score-bump'), 500);
   saveProgress();
-  checkAchievements(prevScore);
 
-  if (roundScore >= config.targetScore) {
+  const unlockCtx = {
+    roundScore,
+    isSuccess,
+    levelId: config.id,
+    isPerfect: roundScore >= 90,
+  };
+  checkAchievements(prevScore, unlockCtx);
+
+  if (isSuccess) {
     dom.plate.classList.add('plate--success');
     playSound('success');
     showScoreFloat('+' + roundScore, true);
     setTimeout(() => {
-      showModal('🎉', 'Отличная тарелка!', 'Ты набрал <strong>' + roundScore + '</strong> очков за этот раунд!', '+' + roundScore + ' · Всего: ' + state.score, () => {
-        if (state.level >= LEVELS.length) endGame(true);
-        else nextLevel();
-      });
+      if (state.level >= LEVELS.length) {
+        if (!state.stats.levelsCompleted.includes(LEVELS.length)) {
+          state.stats.levelsCompleted.push(LEVELS.length);
+          saveProgress();
+        }
+        showVictoryScreen();
+      } else {
+        showModal('🎉', 'Отличная тарелка!', 'Ты набрал <strong>' + roundScore + '</strong> очков за этот раунд!', '+' + roundScore + ' · Всего: ' + state.score, () => nextLevel());
+      }
     }, 600);
   } else {
     playSound('error');
@@ -675,24 +751,184 @@ function updateLiveAdvice() {
 }
 
 /* ===== Достижения ===== */
-function checkAchievements(prevScore) {
-  ACHIEVEMENTS.forEach((ach) => {
-    if (state.achievements.includes(ach.id)) return;
-    if (state.score >= ach.score && prevScore < ach.score) {
-      state.achievements.push(ach.id);
-      saveProgress();
-      playSound('achievement');
-      showAchievement(ach);
-    }
-  });
+function checkAchievementCondition(ach, ctx) {
+  switch (ach.type) {
+    case 'score': return state.score >= ach.value;
+    case 'perfect': return ctx.isPerfect;
+    case 'streak': return state.stats.successStreak >= ach.value;
+    case 'totalSuccess': return state.stats.successfulChecks >= ach.value;
+    case 'level': return ctx.levelId === ach.value && ctx.isSuccess;
+    default: return false;
+  }
 }
 
-function showAchievement(ach) {
-  dom.achievementIcon.textContent = ach.icon;
-  dom.achievementTitle.textContent = ach.title;
-  dom.achievementText.textContent = ach.text;
+function checkAchievements(prevScore, ctx) {
+  const unlocked = [];
+  ACHIEVEMENTS.forEach((ach) => {
+    if (state.achievements.includes(ach.id)) return;
+    if (checkAchievementCondition(ach, ctx)) {
+      state.achievements.push(ach.id);
+      unlocked.push(ach);
+    }
+  });
+  if (unlocked.length) {
+    saveProgress();
+    unlocked.forEach((ach, i) => {
+      setTimeout(() => {
+        playSound('achievement');
+        showAchievementToast(ach);
+      }, i * 400);
+    });
+  }
+}
+
+function showAchievementToast(ach) {
+  const toast = document.createElement('div');
+  toast.className = 'toast toast--achievement toast--achievement-new';
+  toast.innerHTML = '<strong>🏆 Новое достижение!</strong><span>' + ach.title + '</span>';
+  dom.toastContainer.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('toast--visible'));
+  setTimeout(() => {
+    toast.classList.remove('toast--visible');
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+function updateAchievementsCount() {
+  const count = state.achievements.length;
+  const total = ACHIEVEMENTS.length;
+  if (dom.achievementsCount) dom.achievementsCount.textContent = count;
+  if (dom.achievementsProgress) {
+    dom.achievementsProgress.textContent = count + ' из ' + total + ' открыто';
+  }
+}
+
+function openAchievementsPanel() {
+  dom.achievementsGrid.innerHTML = ACHIEVEMENTS.map((ach) => {
+    const unlocked = state.achievements.includes(ach.id);
+    return '<article class="achievement-card' + (unlocked ? ' achievement-card--unlocked' : ' achievement-card--locked') + '">' +
+      '<div class="achievement-card__icon">' + (unlocked ? ach.icon : '🔒') + '</div>' +
+      '<h3>' + ach.title + '</h3>' +
+      '<p>' + ach.desc + '</p>' +
+      (unlocked ? '<span class="achievement-card__badge">Получено</span>' : '') +
+    '</article>';
+  }).join('');
+  updateAchievementsCount();
   dom.achievementModal.classList.remove('hidden');
-  showToast('Достижение: ' + ach.title, 'achievement');
+}
+
+function getPlayerRank(score) {
+  for (let i = 0; i < RANKS.length; i++) {
+    if (score >= RANKS[i].min) return RANKS[i];
+  }
+  return RANKS[RANKS.length - 1];
+}
+
+function getSuccessRate() {
+  if (!state.stats.totalChecks) return 0;
+  return Math.round((state.stats.successfulChecks / state.stats.totalChecks) * 100);
+}
+
+/* ===== Экран победы ===== */
+function showVictoryScreen() {
+  state.isPlaying = false;
+  clearInterval(state.timerId);
+  saveProgress();
+
+  const rank = getPlayerRank(state.score);
+  dom.victoryRank.innerHTML = '<span class="victory-rank__icon">' + rank.icon + '</span><span class="victory-rank__title">' + rank.title + '</span>';
+  dom.victoryScore.textContent = state.score;
+  dom.victoryAchievements.textContent = state.achievements.length + ' / ' + ACHIEVEMENTS.length;
+  dom.victoryProducts.textContent = state.discoveredProducts.length + ' / ' + PRODUCTS.length;
+  dom.victoryTime.textContent = state.stats.bestTimeLeft ? state.stats.bestTimeLeft + ' сек' : '—';
+  dom.victoryRate.textContent = getSuccessRate() + '%';
+
+  dom.victoryScreen.classList.remove('hidden');
+  dom.victoryScreen.setAttribute('aria-hidden', 'false');
+  requestAnimationFrame(() => {
+    dom.victoryScreen.classList.add('victory-screen--visible');
+    startConfetti();
+  });
+  playSound('achievement');
+}
+
+function hideVictoryScreen() {
+  stopConfetti();
+  dom.victoryScreen.classList.remove('victory-screen--visible');
+  dom.victoryScreen.setAttribute('aria-hidden', 'true');
+  setTimeout(() => dom.victoryScreen.classList.add('hidden'), 500);
+}
+
+function restartGame() {
+  hideVictoryScreen();
+  state.score = 0;
+  state.level = 1;
+  state.stats = {
+    totalChecks: 0,
+    successfulChecks: 0,
+    successStreak: 0,
+    bestTimeLeft: 0,
+    highScore: state.stats.highScore,
+    levelsCompleted: [],
+  };
+  saveProgress();
+  showStartScreen();
+  resetRound();
+  updateUI();
+  updateLevelUI();
+}
+
+function startConfetti() {
+  const canvas = dom.confettiCanvas;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const colors = ['#3db87a', '#6ec99e', '#a8e0c4', '#ffb74d', '#ff8a65', '#ffffff', '#2a9d62'];
+  const pieces = Array.from({ length: 120 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height - canvas.height,
+    w: 6 + Math.random() * 6,
+    h: 10 + Math.random() * 8,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    speed: 2 + Math.random() * 3,
+    swing: Math.random() * Math.PI * 2,
+    spin: (Math.random() - 0.5) * 0.15,
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach((p) => {
+      p.y += p.speed;
+      p.swing += 0.04;
+      p.x += Math.sin(p.swing) * 1.5;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.swing);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = 0.85;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+      if (p.y > canvas.height + 20) {
+        p.y = -20;
+        p.x = Math.random() * canvas.width;
+      }
+    });
+    confettiAnimId = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function stopConfetti() {
+  if (confettiAnimId) {
+    cancelAnimationFrame(confettiAnimId);
+    confettiAnimId = null;
+  }
+  const canvas = dom.confettiCanvas;
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
 }
 
 /* ===== Энциклопедия ===== */
@@ -714,10 +950,15 @@ function openEncyclopedia() {
 
 /* ===== Уровни ===== */
 function nextLevel() {
+  const completedLevel = state.level;
+  if (!state.stats.levelsCompleted.includes(completedLevel)) {
+    state.stats.levelsCompleted.push(completedLevel);
+  }
   state.level++;
   saveProgress();
   updateLevelUI();
   const cfg = getLevelConfig();
+  checkAchievements(state.score, { isSuccess: true, levelId: completedLevel, roundScore: 0, isPerfect: false });
   setNariellaMessage(
     '<strong>Уровень ' + state.level + ': ' + cfg.name + '</strong><br>' +
     cfg.hint + '<br>Цель — <strong>' + cfg.targetScore + '</strong> очков за ' + cfg.time + ' сек.'
