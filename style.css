@@ -414,6 +414,7 @@ body {
   gap: 12px;
   flex: 1;
   min-height: 0;
+  align-items: flex-start;
   animation: fadeIn 0.6s ease 0.2s both;
 }
 
@@ -421,22 +422,78 @@ body {
 .nariella-panel {
   width: 280px;
   flex-shrink: 0;
+  align-self: flex-start;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 2;
 }
 
 .nariella-card {
   border-radius: var(--radius);
   padding: 16px;
-  height: 100%;
-  min-height: 0;
+  height: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: box-shadow var(--transition), transform var(--transition);
-  overflow: hidden;
+  transition: box-shadow var(--transition);
+  overflow: visible;
 }
 
 .nariella-card:hover {
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.nariella-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.nariella-header__text {
+  min-width: 0;
+  flex: 1;
+}
+
+.nariella-avatar-frame {
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  min-height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid #fff;
+  box-shadow: var(--glow-green);
+  animation: avatarGlow 3s ease-in-out infinite;
+  line-height: 0;
+}
+
+.nariella-avatar {
+  width: 64px;
+  height: 64px;
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+  background: none;
+  padding: 0;
+}
+
+.nariella-header h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--green-600);
+  line-height: 1.25;
+  margin: 0;
+}
+
+.nariella-role {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  line-height: 1.35;
+  word-break: break-word;
+  margin-top: 2px;
 }
 
 .nariella-message {
@@ -447,59 +504,22 @@ body {
   padding: 12px;
   font-size: 0.88rem;
   line-height: 1.55;
-  flex: 1;
-  min-height: 72px;
-  max-height: 160px;
-  overflow-y: auto;
+  flex: 0 0 auto;
   transition: var(--transition);
   border-left: 3px solid var(--green-400);
   box-shadow: var(--shadow-soft);
-}
-
-.nariella-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.nariella-avatar-frame {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-  border: 3px solid #fff;
-  box-shadow: var(--glow-green);
-  animation: avatarGlow 3s ease-in-out infinite;
-}
-
-.nariella-avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 0;
-  object-fit: cover;
-  object-position: center top;
-  background: none;
-  padding: 0;
-  animation: none;
-}
-
-.nariella-header h2 {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--green-600);
-}
-
-.nariella-role {
-  font-size: 0.75rem;
-  color: var(--text-light);
+  word-break: break-word;
+  overflow-wrap: break-word;
+  overflow: visible;
 }
 
 .nariella-message p {
   animation: messageIn 0.4s ease;
+  margin: 0;
 }
 
 .result-panel {
+  flex-shrink: 0;
   background: var(--green-50);
   border-radius: var(--radius-sm);
   padding: 12px;
@@ -2180,11 +2200,17 @@ body {
 
   .game-area {
     flex-direction: column;
+    align-items: stretch;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .nariella-panel {
     width: 100%;
     order: -1;
+    align-self: flex-start;
+    flex-shrink: 0;
+    margin-bottom: 24px;
   }
 
   .nariella-card {
@@ -2193,8 +2219,7 @@ body {
 
   .nariella-message {
     font-size: 0.82rem;
-    max-height: 80px;
-    overflow-y: auto;
+    line-height: 1.5;
   }
 
   .plate {
