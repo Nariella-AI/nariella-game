@@ -47,45 +47,51 @@
       </div>
     </header>
 
-    <nav id="level-map" class="level-map glass-panel" aria-label="Прогресс уровней"></nav>
-
-    <div class="meta-row">
-      <div id="daily-streak" class="daily-streak glass-panel">
-        <span class="daily-streak__icon">🔥</span>
-        <span class="daily-streak__text">Серия дней: <strong id="streak-count">1</strong></span>
+    <div class="game-top">
+      <div class="level-compact glass-panel">
+        <div class="level-compact__progress">
+          <div class="level-compact__header">
+            <span id="level-progress-label">Уровень 1 из 5</span>
+            <span id="level-progress-pct" class="level-compact__pct">20%</span>
+          </div>
+          <div class="level-progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+            <div id="level-progress-fill" class="level-progress-fill" style="width:20%"></div>
+          </div>
+        </div>
+        <button type="button" id="level-map-btn" class="btn-level-map">Карта уровней</button>
       </div>
-      <div id="daily-goal" class="daily-goal glass-panel">
-        <div class="daily-goal__header">🌿 Цель дня</div>
-        <p id="daily-goal-text" class="daily-goal__text"></p>
-        <p id="daily-goal-status" class="daily-goal__status hidden"></p>
+
+      <div class="meta-row meta-row--compact">
+        <div id="daily-streak" class="daily-streak glass-panel">
+          <span class="daily-streak__icon">🔥</span>
+          <span class="daily-streak__text"><strong id="streak-count">1</strong></span>
+        </div>
+        <div id="daily-goal" class="daily-goal glass-panel">
+          <span class="daily-goal__header">🌿</span>
+          <p id="daily-goal-text" class="daily-goal__text"></p>
+          <p id="daily-goal-status" class="daily-goal__status hidden"></p>
+        </div>
       </div>
     </div>
-
-    <p id="daily-quote" class="daily-quote glass-panel"></p>
 
     <main class="game-area">
       <aside class="nariella-panel">
         <div class="nariella-card glass-card">
           <div class="nariella-header">
             <div class="nariella-avatar-frame">
-              <img src="images/nariella-avatar.png" alt="Нариелла" class="nariella-avatar" width="64" height="64">
+              <img src="images/nariella-avatar.png" alt="Нариелла" class="nariella-avatar" width="48" height="48">
             </div>
-            <div class="nariella-header__text">
-              <h2>Нариелла</h2>
-              <span class="nariella-role">AI-помощник по питанию</span>
-            </div>
+            <h2 class="nariella-name">Нариелла</h2>
           </div>
-          <div id="nariella-message" class="nariella-message">
-            <p>Привет! 👋 Собери идеальную тарелку: <strong>50% овощей</strong>, <strong>25% белков</strong> и <strong>25% углеводов</strong>. Перетащи продукты на тарелку!</p>
-          </div>
-          <div id="result-panel" class="result-panel hidden">
+          <p id="nariella-hint" class="nariella-hint">Перетащи продукты на тарелку</p>
+          <div id="result-panel" class="result-panel result-panel--compact hidden">
             <div class="result-grade" id="result-grade">—</div>
-            <div class="result-details">
-              <div class="detail-row"><span>Калории:</span><strong id="result-calories">0</strong></div>
-              <div class="detail-row"><span>Хлебные единицы:</span><strong id="result-be">0</strong></div>
-              <div class="detail-row"><span>Овощи:</span><strong id="result-veg">0%</strong></div>
-              <div class="detail-row"><span>Белки:</span><strong id="result-protein">0%</strong></div>
-              <div class="detail-row"><span>Углеводы:</span><strong id="result-carbs">0%</strong></div>
+            <div class="result-details result-details--compact">
+              <span id="result-calories" class="visually-hidden">0</span>
+              <span id="result-be" class="visually-hidden">0</span>
+              <div class="detail-row"><span>Овощи</span><strong id="result-veg">0%</strong></div>
+              <div class="detail-row"><span>Белки</span><strong id="result-protein">0%</strong></div>
+              <div class="detail-row"><span>Углеводы</span><strong id="result-carbs">0%</strong></div>
             </div>
           </div>
         </div>
@@ -108,18 +114,18 @@
           <span class="btn-icon">✓</span>
         </button>
       </section>
-
-      <section class="products-section glass-panel">
-        <h3 class="tray-title">Выбери продукты</h3>
-        <div class="category-tabs">
-          <button class="tab active" data-category="all">Все</button>
-          <button class="tab" data-category="vegetables">🥬 Овощи</button>
-          <button class="tab" data-category="proteins">🍗 Белки</button>
-          <button class="tab" data-category="carbs">🌾 Углеводы</button>
-        </div>
-        <div id="products-grid" class="products-grid"></div>
-      </section>
     </main>
+
+    <section class="products-section products-dock glass-panel">
+      <h3 class="tray-title">Выбери продукты</h3>
+      <div class="category-tabs">
+        <button class="tab active" data-category="all">Все</button>
+        <button class="tab" data-category="vegetables">🥬 Овощи</button>
+        <button class="tab" data-category="proteins">🍗 Белки</button>
+        <button class="tab" data-category="carbs">🌾 Углеводы</button>
+      </div>
+      <div id="products-grid" class="products-grid"></div>
+    </section>
   </div>
 
   <div id="score-float" class="score-float" aria-hidden="true"></div>
@@ -146,6 +152,16 @@
         <div id="achievements-panel-fill" class="achievements-panel__fill" style="width:0%"></div>
       </div>
       <div id="achievements-grid" class="achievements-grid"></div>
+    </div>
+  </div>
+
+  <div id="level-map-modal" class="modal hidden">
+    <div class="modal-content glass-card level-map-modal">
+      <div class="level-map-modal__header">
+        <h2>🗺 Карта уровней</h2>
+        <button id="level-map-close" class="btn-close" type="button" aria-label="Закрыть">✕</button>
+      </div>
+      <nav id="level-map-full" class="level-map level-map--modal" aria-label="Полная карта уровней"></nav>
     </div>
   </div>
 

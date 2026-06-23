@@ -54,8 +54,120 @@ body {
   height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 12px;
-  gap: 10px;
+  padding: 6px 10px;
+  gap: 4px;
+}
+
+.game-top {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Компактный прогресс уровня ===== */
+.level-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  flex-shrink: 0;
+}
+
+.level-compact__progress {
+  flex: 1;
+  min-width: 0;
+}
+
+.level-compact__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--green-600);
+}
+
+.level-compact__pct {
+  color: var(--green-500);
+}
+
+.level-progress-bar {
+  height: 8px;
+  background: var(--green-100);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.level-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green-400), var(--green-300));
+  border-radius: 8px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(61, 184, 122, 0.4);
+}
+
+.btn-level-map {
+  flex-shrink: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--green-50);
+  color: var(--green-600);
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+  border: 1px solid var(--green-100);
+}
+
+.btn-level-map:hover {
+  background: var(--green-100);
+  box-shadow: var(--shadow-soft);
+}
+
+.level-map-modal {
+  max-width: 560px;
+  text-align: left;
+  padding: 20px;
+}
+
+.level-map-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.level-map-modal__header h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--green-600);
+}
+
+.level-map--modal {
+  padding: 8px 4px;
+  box-shadow: none;
+  animation: none;
+  border-radius: var(--radius-sm);
+  background: rgba(240, 250, 245, 0.5);
 }
 
 /* ===== Header ===== */
@@ -64,7 +176,7 @@ body {
   align-items: center;
   justify-content: space-between;
   border-radius: var(--radius);
-  padding: 10px 16px;
+  padding: 6px 12px;
   box-shadow: var(--shadow);
   flex-shrink: 0;
   animation: slideDown 0.5s ease;
@@ -228,6 +340,33 @@ body {
   gap: 8px;
   flex-shrink: 0;
   animation: fadeIn 0.5s ease 0.15s both;
+}
+
+.meta-row--compact {
+  gap: 4px;
+}
+
+.meta-row--compact .daily-streak {
+  padding: 6px 10px;
+}
+
+.meta-row--compact .daily-goal {
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta-row--compact .daily-goal__header {
+  margin-bottom: 0;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.meta-row--compact .daily-goal__text {
+  font-size: 0.8rem;
+  line-height: 1.35;
+  margin: 0;
 }
 
 .daily-streak {
@@ -411,18 +550,13 @@ body {
 /* ===== Game Area ===== */
 .game-area {
   display: grid;
-  grid-template-columns: minmax(260px, 280px) 1fr;
-  grid-template-rows: auto auto;
-  grid-template-areas:
-    "nariella board"
-    "products products";
-  gap: 24px;
-  align-content: start;
+  grid-template-columns: minmax(120px, 160px) 1fr;
+  grid-template-areas: "nariella board";
+  gap: 10px;
+  align-items: start;
   flex: 1;
   min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   animation: fadeIn 0.6s ease 0.2s both;
 }
 
@@ -436,11 +570,11 @@ body {
 
 .nariella-card {
   border-radius: var(--radius);
-  padding: 16px;
+  padding: 10px;
   height: auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
   transition: box-shadow var(--transition);
   overflow: visible;
 }
@@ -452,32 +586,27 @@ body {
 .nariella-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   flex-shrink: 0;
-}
-
-.nariella-header__text {
-  min-width: 0;
-  flex: 1;
 }
 
 .nariella-avatar-frame {
-  width: 64px;
-  height: 64px;
-  min-width: 64px;
-  min-height: 64px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
-  border: 3px solid #fff;
+  border: 2px solid #fff;
   box-shadow: var(--glow-green);
   animation: avatarGlow 3s ease-in-out infinite;
   line-height: 0;
 }
 
 .nariella-avatar {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   display: block;
   object-fit: cover;
   object-position: center center;
@@ -485,43 +614,41 @@ body {
   padding: 0;
 }
 
-.nariella-header h2 {
-  font-size: 1.1rem;
+.nariella-name {
+  font-size: 0.9rem;
   font-weight: 800;
   color: var(--green-600);
-  line-height: 1.25;
+  line-height: 1.2;
   margin: 0;
 }
 
-.nariella-role {
-  display: block;
+.nariella-hint {
+  margin: 0;
   font-size: 0.75rem;
-  color: var(--text-light);
   line-height: 1.35;
-  word-break: break-word;
-  margin-top: 2px;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.nariella-message {
-  background: rgba(240, 250, 245, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: var(--radius-sm);
-  padding: 12px;
-  font-size: 0.88rem;
-  line-height: 1.55;
-  flex: 0 0 auto;
-  transition: var(--transition);
-  border-left: 3px solid var(--green-400);
-  box-shadow: var(--shadow-soft);
-  word-break: break-word;
-  overflow-wrap: break-word;
-  overflow: visible;
+.result-panel--compact {
+  padding: 8px;
 }
 
-.nariella-message p {
-  animation: messageIn 0.4s ease;
-  margin: 0;
+.result-panel--compact .result-grade {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.result-details--compact {
+  font-size: 0.72rem;
+  gap: 2px;
+}
+
+.result-details--compact .detail-row {
+  padding: 2px 0;
 }
 
 .result-panel {
@@ -569,10 +696,46 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 6px;
   min-width: 0;
-  align-self: start;
+  min-height: 0;
+  align-self: stretch;
   overflow: visible;
+  padding-top: 0;
+}
+
+/* ===== Wide screens — акцент на тарелке ===== */
+@media (min-width: 1201px) {
+  #game-container {
+    max-width: 1440px;
+  }
+
+  .game-area {
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+  }
+
+  .nariella-panel {
+    max-width: 140px;
+  }
+
+  .nariella-card {
+    padding: 8px;
+  }
+
+  .game-board {
+    justify-content: flex-start;
+    align-self: stretch;
+  }
+
+  .plate {
+    width: min(480px, calc(100vh - 250px), calc(100vw - 220px));
+    height: min(480px, calc(100vh - 250px), calc(100vw - 220px));
+  }
+
+  .plate-guide {
+    font-size: 0.82rem;
+  }
 }
 
 .plate-guide {
@@ -593,15 +756,16 @@ body {
 .guide-carbs { background: rgba(255, 183, 77, 0.15); color: var(--carb-color); }
 
 .plate {
-  width: min(320px, 70vw);
-  height: min(320px, 70vw);
+  width: min(400px, calc(100vh - 270px), calc(100vw - 180px));
+  height: min(400px, calc(100vh - 270px), calc(100vw - 180px));
   border-radius: 50%;
   background: linear-gradient(145deg, #ffffff, #f0f0f0);
   box-shadow:
     var(--shadow-lg),
     inset 0 2px 8px rgba(0,0,0,0.06),
     0 0 0 6px var(--green-100),
-    0 0 0 8px var(--green-200);
+    0 0 0 8px var(--green-200),
+    0 12px 40px rgba(61, 184, 122, 0.18);
   position: relative;
   transition: var(--transition);
   cursor: default;
@@ -767,15 +931,17 @@ body {
   font-size: 1.1rem;
 }
 
-/* ===== Products Section ===== */
+/* ===== Products Dock (фиксирован снизу) ===== */
 .products-section {
-  grid-area: products;
   border-radius: var(--radius);
-  padding: 12px 16px;
-  align-self: start;
-  overflow: visible;
+  padding: 10px 14px;
   animation: fadeIn 0.5s ease 0.3s both;
   transition: box-shadow var(--transition);
+}
+
+.products-dock {
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
 .products-section:hover {
@@ -2173,21 +2339,27 @@ body {
     font-size: 0.85rem;
   }
 
-  .level-map {
-    padding: 10px 12px;
+  .level-compact {
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  .level-map__step {
-    width: 58px;
+  .btn-level-map {
+    width: 100%;
+    font-size: 0.72rem;
   }
 
-  .level-map__label {
-    font-size: 0.52rem;
-    max-width: 58px;
+  .meta-row--compact {
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 
-  .meta-row {
-    flex-direction: column;
+  .meta-row--compact .daily-streak {
+    flex: 0 0 auto;
+  }
+
+  .meta-row--compact .daily-goal {
+    flex: 1 1 180px;
   }
 
   .daily-streak {
@@ -2210,12 +2382,10 @@ body {
 
   .game-area {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
     grid-template-areas:
       "nariella"
-      "board"
-      "products";
-    gap: 24px;
+      "board";
+    gap: 6px;
     align-content: start;
   }
 
@@ -2224,17 +2394,34 @@ body {
   }
 
   .nariella-card {
-    padding: 12px;
+    padding: 8px 10px;
+    gap: 4px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
-  .nariella-message {
-    font-size: 0.82rem;
-    line-height: 1.5;
+  .nariella-header {
+    flex: 0 0 auto;
+  }
+
+  .nariella-hint {
+    flex: 1 1 140px;
+    min-width: 0;
+    font-size: 0.72rem;
+  }
+
+  .result-panel--compact {
+    width: 100%;
   }
 
   .plate {
-    width: min(260px, 65vw);
-    height: min(260px, 65vw);
+    width: min(320px, calc(100vw - 24px), calc(100vh - 300px));
+    height: min(320px, calc(100vw - 24px), calc(100vh - 300px));
+  }
+
+  .products-dock {
+    padding: 8px 10px;
   }
 
   .products-grid {

@@ -180,7 +180,14 @@ const dom = {
   timer: $('#timer'),
   score: $('#score'),
   level: $('#level'),
-  levelMap: $('#level-map'),
+  levelProgressLabel: $('#level-progress-label'),
+  levelProgressPct: $('#level-progress-pct'),
+  levelProgressFill: $('#level-progress-fill'),
+  levelMapBtn: $('#level-map-btn'),
+  levelMapModal: $('#level-map-modal'),
+  levelMapFull: $('#level-map-full'),
+  levelMapClose: $('#level-map-close'),
+  nariellaHint: $('#nariella-hint'),
   streakCount: $('#streak-count'),
   dailyGoalText: $('#daily-goal-text'),
   dailyGoalStatus: $('#daily-goal-status'),
@@ -191,7 +198,6 @@ const dom = {
   plateGuide: $('#plate-guide'),
   checkBtn: $('#check-btn'),
   productsGrid: $('#products-grid'),
-  nariellaMessage: $('#nariella-message'),
   resultPanel: $('#result-panel'),
   resultGrade: $('#result-grade'),
   resultCalories: $('#result-calories'),
@@ -208,7 +214,6 @@ const dom = {
   startScreen: $('#start-screen'),
   startBtn: $('#start-btn'),
   startDailyQuote: $('#start-daily-quote'),
-  dailyQuote: $('#daily-quote'),
   scoreFloat: $('#score-float'),
   toastContainer: $('#toast-container'),
   achievementModal: $('#achievement-modal'),
@@ -398,6 +403,8 @@ function bindEvents() {
   dom.productDetailClose.addEventListener('click', () => dom.productDetailModal.classList.add('hidden'));
   dom.statsBtn.addEventListener('click', openStatsPanel);
   dom.statsClose.addEventListener('click', () => dom.statsModal.classList.add('hidden'));
+  dom.levelMapBtn.addEventListener('click', openLevelMapModal);
+  dom.levelMapClose.addEventListener('click', () => dom.levelMapModal.classList.add('hidden'));
   dom.victoryReplay.addEventListener('click', restartGame);
   dom.victoryAchievementsBtn.addEventListener('click', () => {
     hideVictoryScreen();
@@ -432,17 +439,35 @@ function getMotivationPhrase() {
 
 function setDailyQuote() {
   const quote = getMotivationPhrase();
-  dom.dailyQuote.textContent = '«' + quote + '» — Нариелла';
-  dom.startDailyQuote.textContent = '«' + quote + '»';
+  if (dom.startDailyQuote) dom.startDailyQuote.textContent = '«' + quote + '»';
 }
 
 function showMotivation(context) {
   const phrase = getMotivationPhrase();
-  if (context === 'level' || context === 'achievement') {
-    showToast('«' + phrase + '» — Нариелла', 'motivation');
-  } else if (context === 'victory' && dom.victoryMotivation) {
-    dom.victoryMotivation.textContent = '«' + phrase + '» — Нариелла';
+  const text = '«' + phrase + '» — Нариелла';
+  if (context === 'victory' && dom.victoryMotivation) {
+    dom.victoryMotivation.textContent = text;
   }
+  if (context === 'start' || context === 'level' || context === 'achievement' || context === 'victory') {
+    showToast(text, 'motivation');
+  }
+}
+
+function stripHtml(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || '';
+}
+
+function truncateHint(text, max) {
+  const clean = String(text).replace(/\s+/g, ' ').trim();
+  const limit = max || 90;
+  return clean.length <= limit ? clean : clean.slice(0, limit - 1) + '…';
+}
+
+function setNariellaHint(text) {
+  if (!dom.nariellaHint) return;
+  dom.nariellaHint.textContent = truncateHint(text);
 }
 
 function getPlayerRank(score) {
@@ -487,16 +512,8 @@ function getLevelMapState(levelId) {
   return 'locked';
 }
 
-function updateLevelUI() {
-  const cfg = getLevelConfig();
-  const t = cfg.target;
-  dom.plateGuide.innerHTML =
-    '<div class="guide-segment guide-veg">🥬 ' + t.vegetables + '%</div>' +
-    '<div class="guide-segment guide-protein">🍗 ' + t.proteins + '%</div>' +
-    '<div class="guide-segment guide-carbs">🌾 ' + t.carbs + '%</div>';
-
-  if (!dom.levelMap) return;
-  dom.levelMap.innerHTML = LEVELS.map((lvl, i) => {
+function renderLevelMapHTML() {
+  return LEVELS.map((lvl, i) => {
     const status = getLevelMapState(lvl.id);
     const connector = i < LEVELS.length - 1
       ? '<span class="level-map__connector' + (status === 'completed' ? ' level-map__connector--done' : '') + '" aria-hidden="true"></span>'
@@ -506,6 +523,31 @@ function updateLevelUI() {
       '<span class="level-map__label">' + lvl.mapLabel + '</span>' +
     '</div>' + connector;
   }).join('');
+}
+
+function updateLevelUI() {
+  const cfg = getLevelConfig();
+  const t = cfg.target;
+  dom.plateGuide.innerHTML =
+    '<div class="guide-segment guide-veg">🥬 ' + t.vegetables + '%</div>' +
+    '<div class="guide-segment guide-protein">🍗 ' + t.proteins + '%</div>' +
+    '<div class="guide-segment guide-carbs">🌾 ' + t.carbs + '%</div>';
+
+  const total = LEVELS.length;
+  const pct = Math.round((state.level / total) * 100);
+  if (dom.levelProgressLabel) dom.levelProgressLabel.textContent = 'Уровень ' + state.level + ' из ' + total;
+  if (dom.levelProgressPct) dom.levelProgressPct.textContent = pct + '%';
+  if (dom.levelProgressFill) {
+    dom.levelProgressFill.style.width = pct + '%';
+    const bar = dom.levelProgressFill.parentElement;
+    if (bar) bar.setAttribute('aria-valuenow', pct);
+  }
+  if (dom.levelMapFull) dom.levelMapFull.innerHTML = renderLevelMapHTML();
+}
+
+function openLevelMapModal() {
+  if (dom.levelMapFull) dom.levelMapFull.innerHTML = renderLevelMapHTML();
+  dom.levelMapModal.classList.remove('hidden');
 }
 
 /* ===== Серия дней ===== */
@@ -613,12 +655,8 @@ function startGame() {
     state.isPlaying = true;
     startTimer();
     const cfg = getLevelConfig();
-    const phrase = getMotivationPhrase();
-    setNariellaMessage(
-      '<strong>' + cfg.name + '</strong><br>' + cfg.hint +
-      '<br>У тебя <strong>' + cfg.time + ' секунд</strong>. ' + cfg.task + '.' +
-      '<br><em>«' + phrase + '»</em>'
-    );
+    setNariellaHint(cfg.hint);
+    showMotivation('start');
   });
 }
 
@@ -660,6 +698,7 @@ function resetRound() {
   dom.resultPanel.classList.add('hidden');
   dom.checkBtn.disabled = true;
   dom.plate.classList.remove('plate--success', 'shake');
+  setNariellaHint(getLevelConfig().hint);
   updateUI();
   renderPlate();
 }
@@ -1030,14 +1069,13 @@ function displayResult(result) {
   dom.resultProtein.textContent = result.percents.proteins + '%';
   dom.resultCarbs.textContent = result.percents.carbs + '%';
 
-  const adviceHTML = result.advice.map((t) => '<p class="advice-item">' + t + '</p>').join('');
-  setNariellaMessage('<strong>Оценка: ' + result.score + '/100</strong>' + adviceHTML);
+  setNariellaHint('Оценка: ' + result.score + '/100 — ' + result.grade.label);
 }
 
 function updateLiveAdvice() {
   const cfg = getLevelConfig();
   if (state.plate.length === 0) {
-    setNariellaMessage(cfg.hint);
+    setNariellaHint(cfg.hint);
     return;
   }
   const total = state.plate.length;
@@ -1048,12 +1086,12 @@ function updateLiveAdvice() {
   const carb = Math.round((counts.carbs / total) * 100);
   const t = cfg.target;
 
-  let hint = 'На тарелке ' + total + ' ' + pluralize(total, 'продукт', 'продукта', 'продуктов') + '. ';
-  if (veg < t.vegetables - 10) hint += 'Нужно больше овощей!';
-  else if (prot < t.proteins - 10) hint += 'Добавь белковый продукт!';
-  else if (carb < t.carbs - 10) hint += 'Не хватает углеводов!';
-  else hint += 'Выглядит неплохо — можешь проверить!';
-  setNariellaMessage(hint);
+  let hint = '';
+  if (veg < t.vegetables - 10) hint = 'Добавь больше овощей';
+  else if (prot < t.proteins - 10) hint = 'Нужен белковый продукт';
+  else if (carb < t.carbs - 10) hint = 'Добавь углеводы';
+  else hint = 'Выглядит хорошо — проверяй!';
+  setNariellaHint(hint);
 }
 
 /* ===== Достижения ===== */
@@ -1349,10 +1387,7 @@ function nextLevel() {
   saveProgress();
   updateLevelUI();
   const newCfg = getLevelConfig();
-  setNariellaMessage(
-    '<strong>Уровень ' + state.level + ': ' + newCfg.name + '</strong><br>' +
-    newCfg.hint + '<br>Цель — <strong>' + newCfg.targetScore + '</strong> очков за ' + newCfg.time + ' сек.'
-  );
+  setNariellaHint(newCfg.hint);
   showMotivation('level');
   resetRound();
   updateUI();
@@ -1381,7 +1416,7 @@ function updateUI() {
 }
 
 function setNariellaMessage(html) {
-  dom.nariellaMessage.innerHTML = '<p>' + html + '</p>';
+  setNariellaHint(stripHtml(html));
 }
 
 function showModal(icon, title, text, scoreText, callback) {
