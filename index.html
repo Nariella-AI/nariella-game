@@ -16,18 +16,8 @@
         <div class="logo-avatar-frame">
           <img src="images/nariella-avatar.png" alt="Нариелла" class="logo-avatar">
         </div>
-        <div>
+        <div class="logo-text">
           <h1>Нариелла: Секрет здоровой тарелки</h1>
-          <p id="level-name" class="level-name">Классическая здоровая тарелка</p>
-          <div class="level-progress-block">
-            <div class="level-progress-header">
-              <span id="level-progress-label">Уровень 1 из 5</span>
-              <span id="level-progress-pct" class="level-progress-pct">20%</span>
-            </div>
-            <div class="level-progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-              <div id="level-progress-fill" class="level-progress-fill" style="width:20%"></div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="header-right">
@@ -50,16 +40,25 @@
           </div>
         </div>
         <div class="header-actions">
+          <button id="stats-btn" class="btn-action" type="button" title="Статистика">📈</button>
           <button id="encyclopedia-btn" class="btn-action" type="button" title="Энциклопедия продуктов">📖</button>
           <button id="sound-btn" class="btn-action btn-action--sound" type="button" title="Звук">🔊</button>
         </div>
       </div>
     </header>
 
-    <div id="daily-goal" class="daily-goal glass-panel">
-      <div class="daily-goal__header">🌿 Цель дня</div>
-      <p id="daily-goal-text" class="daily-goal__text"></p>
-      <p id="daily-goal-status" class="daily-goal__status hidden"></p>
+    <nav id="level-map" class="level-map glass-panel" aria-label="Прогресс уровней"></nav>
+
+    <div class="meta-row">
+      <div id="daily-streak" class="daily-streak glass-panel">
+        <span class="daily-streak__icon">🔥</span>
+        <span class="daily-streak__text">Серия дней: <strong id="streak-count">1</strong></span>
+      </div>
+      <div id="daily-goal" class="daily-goal glass-panel">
+        <div class="daily-goal__header">🌿 Цель дня</div>
+        <p id="daily-goal-text" class="daily-goal__text"></p>
+        <p id="daily-goal-status" class="daily-goal__status hidden"></p>
+      </div>
     </div>
 
     <p id="daily-quote" class="daily-quote glass-panel"></p>
@@ -158,14 +157,19 @@
         <span class="victory-emoji">🎉</span>
         <h2>🏆 Поздравляем!</h2>
       </div>
-      <p class="victory-subtitle">Ты прошёл курс Нариеллы</p>
-      <p class="victory-text">Ты помог Нариелле раскрыть секрет здоровой тарелки и освоил основы здорового питания!</p>
+      <p class="victory-subtitle">Ты прошёл все уровни вместе с Нариеллой.</p>
+      <p id="victory-motivation" class="victory-motivation"></p>
+      <div id="victory-rank" class="victory-rank">
+        <span id="victory-rank-icon" class="victory-rank__icon">🥉</span>
+        <span id="victory-rank-title" class="victory-rank__title">Новичок</span>
+      </div>
       <div class="victory-stats">
-        <div class="victory-stat"><span>⭐</span><div><small>Очки</small><strong id="victory-score">0</strong></div></div>
-        <div class="victory-stat"><span>📊</span><div><small>Уровень</small><strong id="victory-level">5</strong></div></div>
-        <div class="victory-stat"><span>⏱</span><div><small>Лучшее время</small><strong id="victory-time">—</strong></div></div>
-        <div class="victory-stat"><span>🥗</span><div><small>Правильных тарелок</small><strong id="victory-plates">0</strong></div></div>
-        <div class="victory-stat victory-stat--wide"><span>🏆</span><div><small>Полученные достижения</small><strong id="victory-achievements">0</strong></div></div>
+        <div class="victory-stat"><span>⭐</span><div><small>Итоговые очки</small><strong id="victory-score">0</strong></div></div>
+        <div class="victory-stat"><span>🏆</span><div><small>Достижения</small><strong id="victory-achievements">0</strong></div></div>
+        <div class="victory-stat"><span>🔥</span><div><small>Серия дней</small><strong id="victory-streak">0</strong></div></div>
+        <div class="victory-stat"><span>🎯</span><div><small>Лучший результат</small><strong id="victory-best">0</strong></div></div>
+        <div class="victory-stat"><span>🥗</span><div><small>Собранных тарелок</small><strong id="victory-plates">0</strong></div></div>
+        <div class="victory-stat"><span>✅</span><div><small>Успешных проверок</small><strong id="victory-rate">0%</strong></div></div>
       </div>
       <div class="victory-actions">
         <button id="victory-replay" class="btn-victory btn-victory--primary" type="button">🔄 Играть снова</button>
@@ -182,6 +186,46 @@
         <button id="encyclopedia-close" class="btn-close" type="button" aria-label="Закрыть">✕</button>
       </div>
       <div id="encyclopedia-list" class="encyclopedia-list"></div>
+    </div>
+  </div>
+
+  <div id="product-detail-modal" class="modal hidden">
+    <div class="modal-content glass-card product-detail">
+      <button id="product-detail-close" class="btn-close product-detail__close" type="button" aria-label="Закрыть">✕</button>
+      <div class="product-detail__head">
+        <img id="product-detail-icon" src="" alt="">
+        <div>
+          <h2 id="product-detail-name">—</h2>
+          <span id="product-detail-category" class="product-detail__cat">—</span>
+        </div>
+      </div>
+      <div class="product-detail__macros">
+        <div class="macro-chip"><span>Калории</span><strong id="product-detail-cal">0</strong></div>
+        <div class="macro-chip"><span>Белки</span><strong id="product-detail-protein">0 г</strong></div>
+        <div class="macro-chip"><span>Жиры</span><strong id="product-detail-fat">0 г</strong></div>
+        <div class="macro-chip"><span>Углеводы</span><strong id="product-detail-carbs">0 г</strong></div>
+      </div>
+      <div class="product-detail__section">
+        <h3>💚 Польза</h3>
+        <p id="product-detail-benefit"></p>
+      </div>
+      <div class="product-detail__section product-detail__tip">
+        <div class="product-detail__nariella">
+          <img src="images/nariella-avatar.png" alt="Нариелла" width="36" height="36">
+          <span>Совет Нариеллы</span>
+        </div>
+        <p id="product-detail-tip"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="stats-modal" class="modal hidden">
+    <div class="modal-content glass-card stats-panel">
+      <div class="stats-panel__header">
+        <h2>📈 Статистика игрока</h2>
+        <button id="stats-close" class="btn-close" type="button" aria-label="Закрыть">✕</button>
+      </div>
+      <div id="stats-grid" class="stats-grid"></div>
     </div>
   </div>
 

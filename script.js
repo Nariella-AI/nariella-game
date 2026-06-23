@@ -1,31 +1,31 @@
 /* ===== Продукты ===== */
 const PRODUCTS = [
-  { id: 'cucumber',  name: 'Огурец',              category: 'vegetables', icon: 'cucumber.svg',  calories: 16,  be: 0, benefit: 'Увлажняет и низкокалорийный', fact: 'На 95% состоит из воды.' },
-  { id: 'tomato',    name: 'Помидор',             category: 'vegetables', icon: 'tomato.svg',    calories: 18,  be: 0, benefit: 'Богат ликопином', fact: 'Помогает защищать клетки от стресса.' },
-  { id: 'broccoli',  name: 'Брокколи',            category: 'vegetables', icon: 'broccoli.svg',  calories: 34,  be: 0, benefit: 'Источник витамина С и клетчатки', fact: 'Содержит витамин С больше апельсина.' },
-  { id: 'cabbage',   name: 'Капуста',             category: 'vegetables', icon: 'cabbage.svg',   calories: 25,  be: 0, benefit: 'Поддерживает пищеварение', fact: 'Клетчатка помогает чувству сытости.' },
-  { id: 'chicken',   name: 'Курица',              category: 'proteins',   icon: 'chicken.svg',   calories: 165, be: 0, benefit: 'Легкоусвояемый белок', fact: 'Отличный выбор для сытного обеда.' },
-  { id: 'fish',      name: 'Рыба',                category: 'proteins',   icon: 'fish.svg',        calories: 120, be: 0, benefit: 'Полезные жиры для сердца', fact: 'Источник Омега-3.' },
-  { id: 'egg',       name: 'Яйцо',                category: 'proteins',   icon: 'egg.svg',         calories: 78,  be: 0, benefit: 'Полный набор аминокислот', fact: 'Идеально для завтрака.' },
-  { id: 'cottage',   name: 'Творог',              category: 'proteins',   icon: 'cottage.svg',     calories: 100, be: 0.5, benefit: 'Кальций и белок', fact: 'Подходит для лёгкого перекуса.' },
-  { id: 'rice',      name: 'Рис',                 category: 'carbs',      icon: 'rice.svg',        calories: 130, be: 1, benefit: 'Быстрая энергия', fact: 'Легко сочетается с овощами и белком.' },
-  { id: 'buckwheat', name: 'Гречка',              category: 'carbs',      icon: 'buckwheat.svg',   calories: 110, be: 1, benefit: 'Много железа и клетчатки', fact: 'Считается одной из самых полезных круп.' },
-  { id: 'oatmeal',   name: 'Овсянка',             category: 'carbs',      icon: 'oatmeal.svg',     calories: 88,  be: 1, benefit: 'Долгое чувство сытости', fact: 'Классический продукт для завтрака.' },
-  { id: 'bread',     name: 'Цельнозерновой хлеб', category: 'carbs',      icon: 'bread.svg',       calories: 80,  be: 1, benefit: 'Сложные углеводы', fact: 'Цельнозерновой хлеб богаче клетчаткой.' },
+  { id: 'cucumber',  name: 'Огурец',              category: 'vegetables', icon: 'cucumber.svg',  calories: 16,  be: 0, protein: 0.7,  fat: 0.1, carbs: 2.9,  benefit: 'Увлажняет и низкокалорийный', fact: 'На 95% состоит из воды.', tip: 'Добавляй огурец для свежести — он почти не добавляет калорий.' },
+  { id: 'tomato',    name: 'Помидор',             category: 'vegetables', icon: 'tomato.svg',    calories: 18,  be: 0, protein: 0.9,  fat: 0.2, carbs: 3.9,  benefit: 'Богат ликопином', fact: 'Помогает защищать клетки от стресса.', tip: 'Помидоры отлично сочетаются с белком и крупами.' },
+  { id: 'broccoli',  name: 'Брокколи',            category: 'vegetables', icon: 'broccoli.svg',  calories: 34,  be: 0, protein: 2.8,  fat: 0.4, carbs: 6.6,  benefit: 'Источник витамина С и клетчатки', fact: 'Содержит витамин С больше апельсина.', tip: 'Брокколи — суперфуд для половины тарелки с овощами.' },
+  { id: 'cabbage',   name: 'Капуста',             category: 'vegetables', icon: 'cabbage.svg',   calories: 25,  be: 0, protein: 1.3,  fat: 0.1, carbs: 5.8,  benefit: 'Поддерживает пищеварение', fact: 'Клетчатка помогает чувству сытости.', tip: 'Капуста добавляет объём и клетчатку без лишних калорий.' },
+  { id: 'chicken',   name: 'Курица',              category: 'proteins',   icon: 'chicken.svg',   calories: 165, be: 0, protein: 31,   fat: 3.6, carbs: 0,    benefit: 'Легкоусвояемый белок', fact: 'Отличный выбор для сытного обеда.', tip: 'Курица — надёжный белок для сбалансированного обеда.' },
+  { id: 'fish',      name: 'Рыба',                category: 'proteins',   icon: 'fish.svg',      calories: 120, be: 0, protein: 22,   fat: 4,   carbs: 0,    benefit: 'Полезные жиры для сердца', fact: 'Источник Омега-3.', tip: 'Рыба — основа средиземноморской тарелки. Не забудь овощи!' },
+  { id: 'egg',       name: 'Яйцо',                category: 'proteins',   icon: 'egg.svg',       calories: 78,  be: 0, protein: 6.3,  fat: 5.3, carbs: 0.6,  benefit: 'Полный набор аминокислот', fact: 'Идеально для завтрака.', tip: 'Яйцо — быстрый белок для завтрака вместе с овощами.' },
+  { id: 'cottage',   name: 'Творог',              category: 'proteins',   icon: 'cottage.svg',   calories: 100, be: 0.5, protein: 11, fat: 4,   carbs: 3.4,  benefit: 'Кальций и белок', fact: 'Подходит для лёгкого перекуса.', tip: 'Творог — лёгкий белок, хорош для обеда без лишних калорий.' },
+  { id: 'rice',      name: 'Рис',                 category: 'carbs',      icon: 'rice.svg',      calories: 130, be: 1, protein: 2.7,  fat: 0.3, carbs: 28,   benefit: 'Быстрая энергия', fact: 'Легко сочетается с овощами и белком.', tip: 'Рис даёт энергию — не забывай про овощи на тарелке.' },
+  { id: 'buckwheat', name: 'Гречка',              category: 'carbs',      icon: 'buckwheat.svg', calories: 110, be: 1, protein: 4.2,  fat: 1.1, carbs: 21,   benefit: 'Много железа и клетчатки', fact: 'Считается одной из самых полезных круп.', tip: 'Гречка — полезная крупа, отлично сочетается с овощами.' },
+  { id: 'oatmeal',   name: 'Овсянка',             category: 'carbs',      icon: 'oatmeal.svg',   calories: 88,  be: 1, protein: 3,    fat: 1.7, carbs: 15,   benefit: 'Долгое чувство сытости', fact: 'Классический продукт для завтрака.', tip: 'Овсянка — идеальный завтрак с яйцом или фруктами.' },
+  { id: 'bread',     name: 'Цельнозерновой хлеб', category: 'carbs',      icon: 'bread.svg',     calories: 80,  be: 1, protein: 4,    fat: 1,   carbs: 14,   benefit: 'Сложные углеводы', fact: 'Цельнозерновой хлеб богаче клетчаткой.', tip: 'Выбирай цельнозерновой хлеб — он дольше даёт сытость.' },
 ];
 
 const CATEGORY_LABELS = { vegetables: 'Овощи', proteins: 'Белки', carbs: 'Углеводы' };
 
 const LEVELS = [
   {
-    id: 1, name: 'Классическая здоровая тарелка',
+    id: 1, name: 'Классическая здоровая тарелка', mapIcon: '🌱', mapLabel: 'Лёгкий обед',
     task: 'Собери тарелку: 50% овощей, 25% белков, 25% углеводов',
     hint: 'Половина тарелки — овощи, четверть — белки, четверть — углеводы.',
     target: { vegetables: 50, proteins: 25, carbs: 25 },
     time: 60, minItems: 3, targetScore: 60, bonus: 1,
   },
   {
-    id: 2, name: 'Полезный завтрак',
+    id: 2, name: 'Полезный завтрак', mapIcon: '🥗', mapLabel: 'Баланс',
     task: 'Собери лёгкий завтрак с овсянкой или яйцом',
     hint: 'Для завтрака добавь овсянку, яйцо и свежие овощи.',
     target: { vegetables: 40, proteins: 25, carbs: 35 },
@@ -34,7 +34,7 @@ const LEVELS = [
     requireAny: true,
   },
   {
-    id: 3, name: 'Обед для похудения',
+    id: 3, name: 'Обед для похудения', mapIcon: '🐟', mapLabel: 'Средиземноморская тарелка',
     task: 'Лёгкий обед: больше овощей, меньше калорий',
     hint: 'Выбирай овощи и нежирный белок — курицу, рыбу или творог.',
     target: { vegetables: 55, proteins: 30, carbs: 15 },
@@ -42,7 +42,7 @@ const LEVELS = [
     maxCalories: 400,
   },
   {
-    id: 4, name: 'Средиземноморская тарелка',
+    id: 4, name: 'Средиземноморская тарелка', mapIcon: '🫒', mapLabel: 'Продвинутый уровень',
     task: 'Добавь рыбу и много овощей',
     hint: 'Средиземноморский стиль — рыба, овощи и умеренные углеводы.',
     target: { vegetables: 45, proteins: 30, carbs: 25 },
@@ -50,7 +50,7 @@ const LEVELS = [
     requireIds: ['fish'],
   },
   {
-    id: 5, name: 'Тарелка долгожителя',
+    id: 5, name: 'Тарелка долгожителя', mapIcon: '🏆', mapLabel: 'Мастер здоровой тарелки',
     task: 'Идеальный баланс всех групп продуктов',
     hint: 'Используй продукты из каждой категории — разнообразие продлевает здоровье.',
     target: { vegetables: 50, proteins: 25, carbs: 25 },
@@ -62,9 +62,16 @@ const LEVELS = [
 const ACHIEVEMENTS = [
   { id: 'firstPlate', icon: '🥗', title: 'Первая тарелка', desc: 'Собрать первую правильную тарелку', type: 'firstSuccess' },
   { id: 'vegLover', icon: '🥦', title: 'Любитель овощей', desc: 'Собрать 10 овощных тарелок', type: 'vegPlates', value: 10 },
-  { id: 'fishExpert', icon: '🐟', title: 'Рыбный эксперт', desc: 'Успешно использовать рыбу 5 раз', type: 'fishSuccess', value: 5 },
-  { id: 'fastStart', icon: '⚡', title: 'Быстрый старт', desc: 'Пройти уровень быстрее чем за 20 секунд', type: 'fastLevel', value: 20 },
+  { id: 'proteinExpert', icon: '🐟', title: 'Белковый эксперт', desc: 'Успешно использовать белок 5 раз', type: 'proteinSuccess', value: 5 },
+  { id: 'streak7', icon: '🔥', title: 'Серия 7 дней', desc: 'Заходи в игру 7 дней подряд', type: 'streakDays', value: 7 },
   { id: 'master', icon: '🏆', title: 'Мастер здоровой тарелки', desc: 'Пройти все уровни', type: 'allLevels' },
+];
+
+const PLAYER_RANKS = [
+  { icon: '🥉', title: 'Новичок', minScore: 0 },
+  { icon: '🥈', title: 'ЗОЖ-помощник', minScore: 250 },
+  { icon: '🥇', title: 'Эксперт', minScore: 450 },
+  { icon: '👑', title: 'Мастер здоровой тарелки', minScore: 600, requireAllLevels: true },
 ];
 
 const DAILY_GOALS_POOL = [
@@ -75,14 +82,59 @@ const DAILY_GOALS_POOL = [
 ];
 
 const DAILY_GOAL_BONUS = 50;
+const ACHIEVEMENT_BONUS = 50;
 
-const DAILY_QUOTES = [
+const MOTIVATION_PHRASES = [
   'Каждая полезная тарелка — шаг к здоровью.',
   'Сегодня ты делаешь выбор в пользу энергии.',
   'Маленькие привычки создают большие результаты.',
   'Здоровое питание — это забота о себе каждый день.',
   'Твоя тарелка — твой лучший союзник.',
   'Баланс на тарелке — баланс в жизни.',
+  'Ты на правильном пути — продолжай!',
+  'Овощи — твои друзья, не забывай о них.',
+  'Каждый уровень делает тебя сильнее.',
+  'Питание — это топливо для твоих мечтаний.',
+  'Ты уже молодец, что заботишься о себе.',
+  'Здоровая тарелка — здоровый разум.',
+  'Слушай своё тело — оно знает, что нужно.',
+  'Разнообразие на тарелке — разнообразие в жизни.',
+  'Белки строят, овощи защищают, углеводы дают силу.',
+  'Ты учишься питаться осознанно — это ценно.',
+  'Каждый день — новая возможность стать лучше.',
+  'Не идеальность, а постоянство — вот секрет.',
+  'Твои усилия не остаются незамеченными.',
+  'Нариелла верит в тебя!',
+  'Полезная еда может быть вкусной и красивой.',
+  'Ты создаёшь привычку, которая изменит жизнь.',
+  'Сбалансированная тарелка — подарок себе.',
+  'Каждый продукт на тарелке имеет значение.',
+  'Ты становишься экспертом здорового питания.',
+  'Гордись каждым правильным выбором.',
+  'Энергия начинается с того, что на тарелке.',
+  'Один шаг за другим — так строится здоровье.',
+  'Ты инвестируешь в своё будущее прямо сейчас.',
+  'ЗОЖ — это не диета, а образ жизни.',
+  'Твоя мотивация вдохновляет меня!',
+  'Продолжай экспериментировать с продуктами.',
+  'Лучшее время начать — сегодня.',
+  'Ты учишься слушать сигналы своего тела.',
+  'Каждая победа на тарелке — победа в жизни.',
+  'Свежие овощи — источник витаминов и радости.',
+  'Ты на пути к мастерству здоровой тарелки.',
+  'Не сдавайся — ты ближе к цели, чем кажется.',
+  'Правильное питание — акт любви к себе.',
+  'Твоя тарелка рассказывает историю заботы.',
+  'Белковый баланс — ключ к сытости и силе.',
+  'Углеводы дают энергию для новых свершений.',
+  'Ты делаешь мир вокруг себя здоровее.',
+  'Каждый уровень — новый навык на всю жизнь.',
+  'Терпение и практика творят чудеса.',
+  'Ты уже изменил свои привычки к лучшему.',
+  'Здоровье — это ежедневный выбор, и ты его делаешь.',
+  'Нариелла гордится твоим прогрессом!',
+  'Продолжай — впереди ещё больше открытий.',
+  'Ты — настоящий ЗОЖ-герой!',
 ];
 
 const STORAGE_KEY = 'nariella-game-save';
@@ -101,6 +153,7 @@ const state = {
   achievementDates: {},
   discoveredProducts: [],
   dailyGoal: { date: '', goalId: '', completed: false },
+  dailyStreak: { count: 0, lastDate: '' },
   levelRoundFailures: 0,
   stats: {
     totalChecks: 0,
@@ -111,8 +164,11 @@ const state = {
     highScore: 0,
     levelsCompleted: [],
     vegPlates: 0,
-    fishSuccessCount: 0,
+    proteinSuccessCount: 0,
     successRate: 0,
+    gamesPlayed: 0,
+    totalScoreEarned: 0,
+    productUsage: {},
   },
   roundStartTime: 0,
 };
@@ -124,10 +180,8 @@ const dom = {
   timer: $('#timer'),
   score: $('#score'),
   level: $('#level'),
-  levelName: $('#level-name'),
-  levelProgressLabel: $('#level-progress-label'),
-  levelProgressPct: $('#level-progress-pct'),
-  levelProgressFill: $('#level-progress-fill'),
+  levelMap: $('#level-map'),
+  streakCount: $('#streak-count'),
   dailyGoalText: $('#daily-goal-text'),
   dailyGoalStatus: $('#daily-goal-status'),
   dailyGoalCard: $('#daily-goal'),
@@ -167,10 +221,14 @@ const dom = {
   victoryScreen: $('#victory-screen'),
   confettiCanvas: $('#confetti-canvas'),
   victoryScore: $('#victory-score'),
-  victoryLevel: $('#victory-level'),
   victoryPlates: $('#victory-plates'),
   victoryAchievements: $('#victory-achievements'),
-  victoryTime: $('#victory-time'),
+  victoryStreak: $('#victory-streak'),
+  victoryBest: $('#victory-best'),
+  victoryRate: $('#victory-rate'),
+  victoryRankIcon: $('#victory-rank-icon'),
+  victoryRankTitle: $('#victory-rank-title'),
+  victoryMotivation: $('#victory-motivation'),
   victoryReplay: $('#victory-replay'),
   victoryAchievementsBtn: $('#victory-achievements'),
   victoryEncyclopedia: $('#victory-encyclopedia'),
@@ -178,6 +236,21 @@ const dom = {
   encyclopediaList: $('#encyclopedia-list'),
   encyclopediaBtn: $('#encyclopedia-btn'),
   encyclopediaClose: $('#encyclopedia-close'),
+  productDetailModal: $('#product-detail-modal'),
+  productDetailClose: $('#product-detail-close'),
+  productDetailIcon: $('#product-detail-icon'),
+  productDetailName: $('#product-detail-name'),
+  productDetailCategory: $('#product-detail-category'),
+  productDetailCal: $('#product-detail-cal'),
+  productDetailProtein: $('#product-detail-protein'),
+  productDetailFat: $('#product-detail-fat'),
+  productDetailCarbs: $('#product-detail-carbs'),
+  productDetailBenefit: $('#product-detail-benefit'),
+  productDetailTip: $('#product-detail-tip'),
+  statsBtn: $('#stats-btn'),
+  statsModal: $('#stats-modal'),
+  statsClose: $('#stats-close'),
+  statsGrid: $('#stats-grid'),
   soundBtn: $('#sound-btn'),
   scoreStat: $('#score-stat'),
 };
@@ -207,6 +280,8 @@ function playSound(type) {
       success:   { f: [392, 523, 659, 784], d: 0.1, type: 'triangle', vol: 0.1 },
       achievement: { f: [523, 659, 784, 1047], d: 0.15, type: 'sine', vol: 0.12 },
       error:     { f: [200, 180], d: 0.15, type: 'sawtooth', vol: 0.06 },
+      levelUp:   { f: [440, 554, 659, 880], d: 0.11, type: 'triangle', vol: 0.1 },
+      victory:   { f: [523, 659, 784, 988, 1175], d: 0.14, type: 'sine', vol: 0.13 },
     };
     const p = presets[type] || presets.points;
     p.f.forEach((freq, i) => {
@@ -246,6 +321,7 @@ function saveProgress() {
       discoveredProducts: state.discoveredProducts,
       soundEnabled: state.soundEnabled,
       dailyGoal: state.dailyGoal,
+      dailyStreak: state.dailyStreak,
       stats: state.stats,
     }));
     updateAchievementsCount();
@@ -263,11 +339,36 @@ function loadProgress() {
     state.achievementDates = data.achievementDates || {};
     state.discoveredProducts = data.discoveredProducts || [];
     if (data.dailyGoal) state.dailyGoal = data.dailyGoal;
+    if (data.dailyStreak) state.dailyStreak = data.dailyStreak;
     if (typeof data.soundEnabled === 'boolean') state.soundEnabled = data.soundEnabled;
     if (data.stats) {
       state.stats = { ...state.stats, ...data.stats };
+      if (state.stats.fishSuccessCount && !state.stats.proteinSuccessCount) {
+        state.stats.proteinSuccessCount = state.stats.fishSuccessCount;
+      }
+      if (!state.stats.productUsage) state.stats.productUsage = {};
     }
+    migrateAchievements();
   } catch (_) { /* ignore */ }
+}
+
+function migrateAchievements() {
+  const map = { fishExpert: 'proteinExpert', fastStart: null };
+  Object.keys(map).forEach((oldId) => {
+    const idx = state.achievements.indexOf(oldId);
+    if (idx === -1) return;
+    state.achievements.splice(idx, 1);
+    const newId = map[oldId];
+    if (newId && !state.achievements.includes(newId)) {
+      state.achievements.push(newId);
+      if (state.achievementDates[oldId]) {
+        state.achievementDates[newId] = state.achievementDates[oldId];
+        delete state.achievementDates[oldId];
+      }
+    } else {
+      delete state.achievementDates[oldId];
+    }
+  });
 }
 
 /* ===== Инициализация ===== */
@@ -275,6 +376,7 @@ function init() {
   loadProgress();
   updateSoundBtn();
   setDailyQuote();
+  initDailyStreak();
   initDailyGoal();
   updateLevelUI();
   renderProducts();
@@ -282,6 +384,7 @@ function init() {
   updateUI();
   updateAchievementsCount();
   updateDailyGoalUI();
+  updateStreakUI();
 }
 
 function bindEvents() {
@@ -292,6 +395,9 @@ function bindEvents() {
   dom.achievementsClose.addEventListener('click', () => dom.achievementModal.classList.add('hidden'));
   dom.encyclopediaBtn.addEventListener('click', openEncyclopedia);
   dom.encyclopediaClose.addEventListener('click', () => dom.encyclopediaModal.classList.add('hidden'));
+  dom.productDetailClose.addEventListener('click', () => dom.productDetailModal.classList.add('hidden'));
+  dom.statsBtn.addEventListener('click', openStatsPanel);
+  dom.statsClose.addEventListener('click', () => dom.statsModal.classList.add('hidden'));
   dom.victoryReplay.addEventListener('click', restartGame);
   dom.victoryAchievementsBtn.addEventListener('click', () => {
     hideVictoryScreen();
@@ -320,31 +426,117 @@ function bindEvents() {
   setupDropZone(dom.plate);
 }
 
+function getMotivationPhrase() {
+  return MOTIVATION_PHRASES[Math.floor(Math.random() * MOTIVATION_PHRASES.length)];
+}
+
 function setDailyQuote() {
-  const quote = DAILY_QUOTES[Math.floor(Math.random() * DAILY_QUOTES.length)];
+  const quote = getMotivationPhrase();
   dom.dailyQuote.textContent = '«' + quote + '» — Нариелла';
   dom.startDailyQuote.textContent = '«' + quote + '»';
+}
+
+function showMotivation(context) {
+  const phrase = getMotivationPhrase();
+  if (context === 'level' || context === 'achievement') {
+    showToast('«' + phrase + '» — Нариелла', 'motivation');
+  } else if (context === 'victory' && dom.victoryMotivation) {
+    dom.victoryMotivation.textContent = '«' + phrase + '» — Нариелла';
+  }
+}
+
+function getPlayerRank(score) {
+  const allDone = state.stats.levelsCompleted.length >= LEVELS.length;
+  let rank = PLAYER_RANKS[0];
+  PLAYER_RANKS.forEach((r) => {
+    if (score >= r.minScore && (!r.requireAllLevels || allDone)) rank = r;
+  });
+  return rank;
+}
+
+function getFavoriteProduct() {
+  const usage = state.stats.productUsage || {};
+  let bestId = null;
+  let bestCount = 0;
+  Object.keys(usage).forEach((id) => {
+    if (usage[id] > bestCount) { bestCount = usage[id]; bestId = id; }
+  });
+  if (!bestId) return '—';
+  const p = PRODUCTS.find((x) => x.id === bestId);
+  return p ? p.name : '—';
+}
+
+function getAverageScore() {
+  if (!state.stats.gamesPlayed) return 0;
+  return Math.round(state.stats.totalScoreEarned / state.stats.gamesPlayed);
+}
+
+function trackProductUsage(id) {
+  if (!state.stats.productUsage) state.stats.productUsage = {};
+  state.stats.productUsage[id] = (state.stats.productUsage[id] || 0) + 1;
 }
 
 function getLevelConfig() {
   return LEVELS[Math.min(state.level - 1, LEVELS.length - 1)];
 }
 
+function getLevelMapState(levelId) {
+  if (state.stats.levelsCompleted.includes(levelId)) return 'completed';
+  if (levelId < state.level) return 'completed';
+  if (levelId === state.level) return 'current';
+  return 'locked';
+}
+
 function updateLevelUI() {
   const cfg = getLevelConfig();
-  const total = LEVELS.length;
-  const pct = Math.round((state.level / total) * 100);
-  dom.levelName.textContent = cfg.name;
-  dom.levelProgressLabel.textContent = 'Уровень ' + state.level + ' из ' + total;
-  dom.levelProgressPct.textContent = pct + '%';
-  dom.levelProgressFill.style.width = pct + '%';
-  const bar = dom.levelProgressFill.parentElement;
-  if (bar) bar.setAttribute('aria-valuenow', pct);
   const t = cfg.target;
   dom.plateGuide.innerHTML =
     '<div class="guide-segment guide-veg">🥬 ' + t.vegetables + '%</div>' +
     '<div class="guide-segment guide-protein">🍗 ' + t.proteins + '%</div>' +
     '<div class="guide-segment guide-carbs">🌾 ' + t.carbs + '%</div>';
+
+  if (!dom.levelMap) return;
+  dom.levelMap.innerHTML = LEVELS.map((lvl, i) => {
+    const status = getLevelMapState(lvl.id);
+    const connector = i < LEVELS.length - 1
+      ? '<span class="level-map__connector' + (status === 'completed' ? ' level-map__connector--done' : '') + '" aria-hidden="true"></span>'
+      : '';
+    return '<div class="level-map__step level-map__step--' + status + '" title="' + lvl.mapLabel + '">' +
+      '<div class="level-map__node"><span class="level-map__icon">' + lvl.mapIcon + '</span></div>' +
+      '<span class="level-map__label">' + lvl.mapLabel + '</span>' +
+    '</div>' + connector;
+  }).join('');
+}
+
+/* ===== Серия дней ===== */
+function getYesterdayKey() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function initDailyStreak() {
+  const today = getTodayKey();
+  if (!state.dailyStreak || typeof state.dailyStreak.count !== 'number') {
+    state.dailyStreak = { count: 0, lastDate: '' };
+  }
+  if (state.dailyStreak.lastDate === today) return;
+
+  const yesterday = getYesterdayKey();
+  if (state.dailyStreak.lastDate === yesterday) {
+    state.dailyStreak.count += 1;
+  } else {
+    state.dailyStreak.count = 1;
+  }
+  state.dailyStreak.lastDate = today;
+  saveProgress();
+  checkAchievements({ isSuccess: false, streakCheck: true });
+}
+
+function updateStreakUI() {
+  if (dom.streakCount) {
+    dom.streakCount.textContent = state.dailyStreak.count || 1;
+  }
 }
 
 /* ===== Цель дня ===== */
@@ -413,15 +605,19 @@ function formatAchDate(iso) {
 }
 
 function startGame() {
+  state.stats.gamesPlayed = (state.stats.gamesPlayed || 0) + 1;
+  saveProgress();
   hideStartScreen(() => {
     state.levelRoundFailures = 0;
     resetRound();
     state.isPlaying = true;
     startTimer();
     const cfg = getLevelConfig();
+    const phrase = getMotivationPhrase();
     setNariellaMessage(
       '<strong>' + cfg.name + '</strong><br>' + cfg.hint +
-      '<br>У тебя <strong>' + cfg.time + ' секунд</strong>. ' + cfg.task + '.'
+      '<br>У тебя <strong>' + cfg.time + ' секунд</strong>. ' + cfg.task + '.' +
+      '<br><em>«' + phrase + '»</em>'
     );
   });
 }
@@ -584,6 +780,7 @@ function addToPlate(product) {
     return;
   }
   discoverProduct(product.id);
+  trackProductUsage(product.id);
   state.plate.push({ ...product, uid: Date.now() + Math.random() });
   state.checked = false;
   dom.resultPanel.classList.add('hidden');
@@ -670,7 +867,7 @@ function checkPlate() {
     }
     const vegCount = state.plate.filter((p) => p.category === 'vegetables').length;
     if (vegCount >= 3) state.stats.vegPlates++;
-    if (state.plate.some((p) => p.id === 'fish')) state.stats.fishSuccessCount++;
+    if (state.plate.some((p) => p.category === 'proteins')) state.stats.proteinSuccessCount++;
   } else {
     state.stats.successStreak = 0;
     state.levelRoundFailures++;
@@ -680,6 +877,7 @@ function checkPlate() {
     : 0;
 
   state.score += roundScore;
+  state.stats.totalScoreEarned = (state.stats.totalScoreEarned || 0) + roundScore;
   updateUI();
   dom.scoreStat.classList.add('score-bump');
   setTimeout(() => dom.scoreStat.classList.remove('score-bump'), 500);
@@ -863,8 +1061,8 @@ function checkAchievementCondition(ach, ctx) {
   switch (ach.type) {
     case 'firstSuccess': return ctx.isSuccess && state.stats.successfulChecks >= 1;
     case 'vegPlates': return state.stats.vegPlates >= ach.value;
-    case 'fishSuccess': return state.stats.fishSuccessCount >= ach.value;
-    case 'fastLevel': return ctx.isSuccess && ctx.elapsed <= ach.value;
+    case 'proteinSuccess': return state.stats.proteinSuccessCount >= ach.value;
+    case 'streakDays': return state.dailyStreak.count >= ach.value;
     case 'allLevels': return state.stats.levelsCompleted.length >= LEVELS.length;
     default: return false;
   }
@@ -877,16 +1075,19 @@ function checkAchievements(ctx) {
     if (checkAchievementCondition(ach, ctx)) {
       state.achievements.push(ach.id);
       state.achievementDates[ach.id] = new Date().toISOString();
+      state.score += ACHIEVEMENT_BONUS;
       unlocked.push(ach);
     }
   });
   if (unlocked.length) {
     saveProgress();
     updateAchievementsCount();
+    updateUI();
     unlocked.forEach((ach, i) => {
       setTimeout(() => {
         playSound('achievement');
         showAchievementToast(ach);
+        showMotivation('achievement');
       }, i * 400);
     });
   }
@@ -894,14 +1095,22 @@ function checkAchievements(ctx) {
 
 function showAchievementToast(ach) {
   const toast = document.createElement('div');
-  toast.className = 'toast toast--achievement toast--achievement-new';
-  toast.innerHTML = '<strong>🏆 Новое достижение!</strong><span>' + ach.title + '</span>';
+  toast.className = 'achievement-toast';
+  toast.innerHTML =
+    '<div class="achievement-toast__shine" aria-hidden="true"></div>' +
+    '<img src="images/nariella-avatar.png" alt="" class="achievement-toast__avatar" width="48" height="48">' +
+    '<div class="achievement-toast__content">' +
+      '<span class="achievement-toast__badge">🏆 Новое достижение!</span>' +
+      '<span class="achievement-toast__icon">' + ach.icon + '</span>' +
+      '<strong class="achievement-toast__title">' + ach.title + '</strong>' +
+      '<span class="achievement-toast__points">+' + ACHIEVEMENT_BONUS + ' очков</span>' +
+    '</div>';
   dom.toastContainer.appendChild(toast);
-  requestAnimationFrame(() => toast.classList.add('toast--visible'));
+  requestAnimationFrame(() => toast.classList.add('achievement-toast--visible'));
   setTimeout(() => {
-    toast.classList.remove('toast--visible');
-    setTimeout(() => toast.remove(), 300);
-  }, 3500);
+    toast.classList.remove('achievement-toast--visible');
+    setTimeout(() => toast.remove(), 450);
+  }, 4200);
 }
 
 function updateAchievementsCount() {
@@ -942,16 +1151,21 @@ function getSuccessRate() {
 function showVictoryScreen() {
   state.isPlaying = false;
   clearInterval(state.timerId);
+  state.stats.totalScoreEarned = (state.stats.totalScoreEarned || 0);
+  if (state.score > state.stats.highScore) state.stats.highScore = state.score;
   checkAchievements({ isSuccess: true, levelId: LEVELS.length, elapsed: 0, flawlessLevel: state.levelRoundFailures === 0, roundScore: 0, plate: [] });
   saveProgress();
 
+  const rank = getPlayerRank(state.score);
   dom.victoryScore.textContent = state.score;
-  dom.victoryLevel.textContent = LEVELS.length;
-  dom.victoryTime.textContent = state.stats.bestElapsed !== null
-    ? state.stats.bestElapsed + ' сек'
-    : '—';
-  dom.victoryPlates.textContent = state.stats.successfulChecks;
   dom.victoryAchievements.textContent = state.achievements.length + ' / ' + ACHIEVEMENTS.length;
+  dom.victoryStreak.textContent = state.dailyStreak.count || 1;
+  dom.victoryBest.textContent = state.stats.highScore;
+  dom.victoryPlates.textContent = state.stats.successfulChecks;
+  dom.victoryRate.textContent = getSuccessRate() + '%';
+  dom.victoryRankIcon.textContent = rank.icon;
+  dom.victoryRankTitle.textContent = rank.title;
+  showMotivation('victory');
 
   dom.victoryScreen.classList.remove('hidden');
   dom.victoryScreen.setAttribute('aria-hidden', 'false');
@@ -959,7 +1173,7 @@ function showVictoryScreen() {
     dom.victoryScreen.classList.add('victory-screen--visible');
     startConfetti();
   });
-  playSound('achievement');
+  playSound('victory');
 }
 
 function hideVictoryScreen() {
@@ -983,9 +1197,13 @@ function restartGame() {
     highScore: state.stats.highScore,
     levelsCompleted: [],
     vegPlates: 0,
-    fishSuccessCount: 0,
+    proteinSuccessCount: 0,
     successRate: 0,
+    gamesPlayed: state.stats.gamesPlayed,
+    totalScoreEarned: 0,
+    productUsage: state.stats.productUsage || {},
   };
+  initDailyStreak();
   initDailyGoal();
   saveProgress();
   showStartScreen();
@@ -993,6 +1211,7 @@ function restartGame() {
   updateUI();
   updateLevelUI();
   updateDailyGoalUI();
+  updateStreakUI();
 }
 
 function startConfetti() {
@@ -1049,20 +1268,61 @@ function stopConfetti() {
 }
 
 /* ===== Энциклопедия ===== */
+function openProductDetail(productId) {
+  const p = PRODUCTS.find((x) => x.id === productId);
+  if (!p) return;
+  dom.productDetailIcon.src = 'images/' + p.icon;
+  dom.productDetailIcon.alt = p.name;
+  dom.productDetailName.textContent = p.name;
+  dom.productDetailCategory.textContent = CATEGORY_LABELS[p.category];
+  dom.productDetailCal.textContent = p.calories + ' ккал';
+  dom.productDetailProtein.textContent = p.protein + ' г';
+  dom.productDetailFat.textContent = p.fat + ' г';
+  dom.productDetailCarbs.textContent = p.carbs + ' г';
+  dom.productDetailBenefit.textContent = p.benefit;
+  dom.productDetailTip.textContent = p.tip || p.fact;
+  dom.productDetailModal.classList.remove('hidden');
+}
+
 function openEncyclopedia() {
   dom.encyclopediaList.innerHTML = PRODUCTS.map((p) => {
     const discovered = state.discoveredProducts.includes(p.id);
-    return '<article class="encyclopedia-item' + (discovered ? '' : ' encyclopedia-item--locked') + '">' +
+    return '<article class="encyclopedia-item' + (discovered ? ' encyclopedia-item--clickable' : ' encyclopedia-item--locked') + '" data-id="' + p.id + '" role="button" tabindex="0">' +
       '<div class="encyclopedia-item__head">' +
         '<img src="images/' + p.icon + '" alt="">' +
         '<div><h3>' + p.name + '</h3><span class="encyclopedia-cat">' + CATEGORY_LABELS[p.category] + '</span></div>' +
       '</div>' +
       (discovered
-        ? '<p class="encyclopedia-benefit">' + p.benefit + '</p><p class="encyclopedia-fact">💡 ' + p.fact + '</p>'
+        ? '<p class="encyclopedia-benefit">' + p.benefit + '</p><p class="encyclopedia-hint">Нажми, чтобы узнать больше →</p>'
         : '<p class="encyclopedia-locked">Добавь продукт на тарелку, чтобы открыть</p>') +
     '</article>';
   }).join('');
+  dom.encyclopediaList.querySelectorAll('.encyclopedia-item--clickable').forEach((el) => {
+    const open = () => openProductDetail(el.dataset.id);
+    el.addEventListener('click', open);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') open(); });
+  });
   dom.encyclopediaModal.classList.remove('hidden');
+}
+
+/* ===== Статистика ===== */
+function openStatsPanel() {
+  const avg = getAverageScore();
+  const fav = getFavoriteProduct();
+  dom.statsGrid.innerHTML =
+    statRow('🎮', 'Всего игр', state.stats.gamesPlayed || 0) +
+    statRow('🏅', 'Лучший результат', state.stats.highScore || 0) +
+    statRow('📊', 'Средний результат', avg) +
+    statRow('❤️', 'Любимый продукт', fav) +
+    statRow('🏆', 'Достижения', state.achievements.length + ' / ' + ACHIEVEMENTS.length) +
+    statRow('🔥', 'Серия дней', state.dailyStreak.count || 1) +
+    statRow('✅', 'Успешных тарелок', getSuccessRate() + '%') +
+    statRow('🥗', 'Правильных тарелок', state.stats.successfulChecks || 0);
+  dom.statsModal.classList.remove('hidden');
+}
+
+function statRow(icon, label, value) {
+  return '<div class="stats-row"><span class="stats-row__icon">' + icon + '</span><div><small>' + label + '</small><strong>' + value + '</strong></div></div>';
 }
 
 /* ===== Уровни ===== */
@@ -1093,9 +1353,10 @@ function nextLevel() {
     '<strong>Уровень ' + state.level + ': ' + newCfg.name + '</strong><br>' +
     newCfg.hint + '<br>Цель — <strong>' + newCfg.targetScore + '</strong> очков за ' + newCfg.time + ' сек.'
   );
+  showMotivation('level');
   resetRound();
   updateUI();
-  playSound('points');
+  playSound('levelUp');
 }
 
 function endGame(won) {
