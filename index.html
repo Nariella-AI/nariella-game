@@ -49,27 +49,25 @@
 
     <div class="game-top">
       <div class="level-compact glass-panel">
-        <div class="level-compact__progress">
-          <div class="level-compact__header">
-            <span id="level-progress-label">Уровень 1 из 5</span>
-            <span id="level-progress-pct" class="level-compact__pct">20%</span>
-          </div>
-          <div class="level-progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-            <div id="level-progress-fill" class="level-progress-fill" style="width:20%"></div>
-          </div>
+        <div class="level-compact__header">
+          <span id="level-progress-label">Уровень 1 из 5</span>
+          <span id="level-progress-pct" class="level-compact__pct">20%</span>
         </div>
-        <button type="button" id="level-map-btn" class="btn-level-map">Карта уровней</button>
+        <div class="level-progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+          <div id="level-progress-fill" class="level-progress-fill" style="width:20%"></div>
+        </div>
       </div>
 
-      <div class="meta-row meta-row--compact">
-        <div id="daily-streak" class="daily-streak glass-panel">
-          <span class="daily-streak__icon">🔥</span>
-          <span class="daily-streak__text"><strong id="streak-count">1</strong></span>
+      <div id="daily-meta" class="daily-meta glass-panel">
+        <div id="daily-streak" class="daily-meta__streak">
+          <span class="daily-meta__label">🔥 Серия дней</span>
+          <strong id="streak-count" class="daily-meta__value">1</strong>
         </div>
-        <div id="daily-goal" class="daily-goal glass-panel">
-          <span class="daily-goal__header">🌿</span>
-          <p id="daily-goal-text" class="daily-goal__text"></p>
-          <p id="daily-goal-status" class="daily-goal__status hidden"></p>
+        <div class="daily-meta__divider" aria-hidden="true"></div>
+        <div id="daily-goal" class="daily-meta__goal">
+          <span class="daily-meta__label">🎯 Цель дня</span>
+          <p id="daily-goal-text" class="daily-meta__goal-text"></p>
+          <p id="daily-goal-status" class="daily-meta__goal-status hidden"></p>
         </div>
       </div>
     </div>

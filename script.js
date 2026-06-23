@@ -183,12 +183,12 @@ const dom = {
   levelProgressLabel: $('#level-progress-label'),
   levelProgressPct: $('#level-progress-pct'),
   levelProgressFill: $('#level-progress-fill'),
-  levelMapBtn: $('#level-map-btn'),
   levelMapModal: $('#level-map-modal'),
   levelMapFull: $('#level-map-full'),
   levelMapClose: $('#level-map-close'),
   nariellaHint: $('#nariella-hint'),
   streakCount: $('#streak-count'),
+  dailyMeta: $('#daily-meta'),
   dailyGoalText: $('#daily-goal-text'),
   dailyGoalStatus: $('#daily-goal-status'),
   dailyGoalCard: $('#daily-goal'),
@@ -403,8 +403,7 @@ function bindEvents() {
   dom.productDetailClose.addEventListener('click', () => dom.productDetailModal.classList.add('hidden'));
   dom.statsBtn.addEventListener('click', openStatsPanel);
   dom.statsClose.addEventListener('click', () => dom.statsModal.classList.add('hidden'));
-  dom.levelMapBtn.addEventListener('click', openLevelMapModal);
-  dom.levelMapClose.addEventListener('click', () => dom.levelMapModal.classList.add('hidden'));
+  if (dom.levelMapClose) dom.levelMapClose.addEventListener('click', () => dom.levelMapModal.classList.add('hidden'));
   dom.victoryReplay.addEventListener('click', restartGame);
   dom.victoryAchievementsBtn.addEventListener('click', () => {
     hideVictoryScreen();
@@ -605,13 +604,15 @@ function updateDailyGoalUI() {
   if (!goal) return;
   if (state.dailyGoal.completed) {
     dom.dailyGoalText.textContent = goal.text;
-    dom.dailyGoalStatus.textContent = '✓ Цель выполнена · +' + DAILY_GOAL_BONUS + ' очков';
+    dom.dailyGoalStatus.textContent = '✓ +' + DAILY_GOAL_BONUS + ' очков';
     dom.dailyGoalStatus.classList.remove('hidden');
     dom.dailyGoalCard.classList.add('daily-goal--done');
+    if (dom.dailyMeta) dom.dailyMeta.classList.add('daily-meta--done');
   } else {
     dom.dailyGoalText.textContent = goal.text;
     dom.dailyGoalStatus.classList.add('hidden');
     dom.dailyGoalCard.classList.remove('daily-goal--done');
+    if (dom.dailyMeta) dom.dailyMeta.classList.remove('daily-meta--done');
   }
 }
 
