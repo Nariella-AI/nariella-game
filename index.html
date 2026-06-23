@@ -7,39 +7,51 @@
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <div id="game-container">
-    <!-- Шапка -->
-    <header class="header">
+    <header class="header glass-panel">
       <div class="logo">
-        <img src="images/nariella-avatar.png" alt="Нариелла" class="logo-avatar">
-        <h1>Нариелла: Секрет здоровой тарелки</h1>
+        <div class="logo-avatar-frame">
+          <img src="images/nariella-avatar.png" alt="Нариелла" class="logo-avatar">
+        </div>
+        <div>
+          <h1>Нариелла: Секрет здоровой тарелки</h1>
+          <p id="level-name" class="level-name">Уровень 1 — Классическая здоровая тарелка</p>
+        </div>
       </div>
-      <div class="stats-bar">
-        <div class="stat-item">
-          <span class="stat-icon">⏱</span>
-          <span id="timer" class="stat-value">60</span>
+      <div class="header-right">
+        <div class="stats-bar">
+          <div class="stat-item" id="timer-stat">
+            <span class="stat-icon">⏱</span>
+            <span id="timer" class="stat-value">60</span>
+          </div>
+          <div class="stat-item" id="score-stat">
+            <span class="stat-icon">⭐</span>
+            <span id="score" class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">🏆</span>
+            <span id="level" class="stat-value">1</span>
+          </div>
         </div>
-        <div class="stat-item">
-          <span class="stat-icon">⭐</span>
-          <span id="score" class="stat-value">0</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-icon">🏆</span>
-          <span id="level" class="stat-value">1</span>
+        <div class="header-actions">
+          <button id="encyclopedia-btn" class="btn-action" type="button" title="Энциклопедия продуктов">📖</button>
+          <button id="sound-btn" class="btn-action btn-action--sound" type="button" title="Звук">🔊</button>
         </div>
       </div>
     </header>
 
-    <!-- Основная область -->
+    <p id="daily-quote" class="daily-quote glass-panel"></p>
+
     <main class="game-area">
-      <!-- Блок Нариеллы -->
       <aside class="nariella-panel">
-        <div class="nariella-card">
+        <div class="nariella-card glass-card">
           <div class="nariella-header">
-            <img src="images/nariella-avatar.png" alt="Нариелла" class="nariella-avatar">
+            <div class="nariella-avatar-frame">
+              <img src="images/nariella-avatar.png" alt="Нариелла" class="nariella-avatar">
+            </div>
             <div>
               <h2>Нариелла</h2>
               <span class="nariella-role">AI-помощник по питанию</span>
@@ -51,37 +63,21 @@
           <div id="result-panel" class="result-panel hidden">
             <div class="result-grade" id="result-grade">—</div>
             <div class="result-details">
-              <div class="detail-row">
-                <span>Калории:</span>
-                <strong id="result-calories">0</strong>
-              </div>
-              <div class="detail-row">
-                <span>Хлебные единицы:</span>
-                <strong id="result-be">0</strong>
-              </div>
-              <div class="detail-row">
-                <span>Овощи:</span>
-                <strong id="result-veg">0%</strong>
-              </div>
-              <div class="detail-row">
-                <span>Белки:</span>
-                <strong id="result-protein">0%</strong>
-              </div>
-              <div class="detail-row">
-                <span>Углеводы:</span>
-                <strong id="result-carbs">0%</strong>
-              </div>
+              <div class="detail-row"><span>Калории:</span><strong id="result-calories">0</strong></div>
+              <div class="detail-row"><span>Хлебные единицы:</span><strong id="result-be">0</strong></div>
+              <div class="detail-row"><span>Овощи:</span><strong id="result-veg">0%</strong></div>
+              <div class="detail-row"><span>Белки:</span><strong id="result-protein">0%</strong></div>
+              <div class="detail-row"><span>Углеводы:</span><strong id="result-carbs">0%</strong></div>
             </div>
           </div>
         </div>
       </aside>
 
-      <!-- Тарелка -->
       <section class="plate-section">
-        <div class="plate-guide">
-          <div class="guide-segment guide-veg" title="50% овощи">🥬 50%</div>
-          <div class="guide-segment guide-protein" title="25% белки">🍗 25%</div>
-          <div class="guide-segment guide-carbs" title="25% углеводы">🌾 25%</div>
+        <div id="plate-guide" class="plate-guide">
+          <div class="guide-segment guide-veg">🥬 50%</div>
+          <div class="guide-segment guide-protein">🍗 25%</div>
+          <div class="guide-segment guide-carbs">🌾 25%</div>
         </div>
         <div id="plate" class="plate" data-drop-zone="true">
           <div class="plate-inner">
@@ -96,8 +92,7 @@
       </section>
     </main>
 
-    <!-- Продукты -->
-    <footer class="products-tray">
+    <footer class="products-tray glass-panel">
       <h3 class="tray-title">Выбери продукты</h3>
       <div class="category-tabs">
         <button class="tab active" data-category="all">Все</button>
@@ -109,9 +104,11 @@
     </footer>
   </div>
 
-  <!-- Модальное окно -->
+  <div id="score-float" class="score-float" aria-hidden="true"></div>
+  <div id="toast-container" class="toast-container"></div>
+
   <div id="modal" class="modal hidden">
-    <div class="modal-content">
+    <div class="modal-content glass-card">
       <div id="modal-icon" class="modal-icon">🎉</div>
       <h2 id="modal-title">Отлично!</h2>
       <p id="modal-text"></p>
@@ -120,22 +117,35 @@
     </div>
   </div>
 
-  <!-- Стартовый экран -->
+  <div id="achievement-modal" class="modal hidden">
+    <div class="modal-content glass-card achievement-modal">
+      <div id="achievement-icon" class="modal-icon">🥉</div>
+      <h2 id="achievement-title">Достижение!</h2>
+      <p id="achievement-text"></p>
+      <button id="achievement-btn" class="btn-modal">Ура!</button>
+    </div>
+  </div>
+
+  <div id="encyclopedia-modal" class="modal hidden">
+    <div class="modal-content glass-card encyclopedia-modal">
+      <div class="encyclopedia-header">
+        <h2>📖 Энциклопедия продуктов</h2>
+        <button id="encyclopedia-close" class="btn-close" type="button" aria-label="Закрыть">✕</button>
+      </div>
+      <div id="encyclopedia-list" class="encyclopedia-list"></div>
+    </div>
+  </div>
+
   <div id="start-screen" class="start-screen start-screen--visible" aria-hidden="false">
     <div class="start-screen__backdrop"></div>
-    <div class="start-screen__card">
-      <div class="start-screen__avatar-wrap">
-        <img
-          src="images/nariella-avatar.png"
-          alt="Нариелла — AI-помощник по питанию"
-          class="start-screen__avatar"
-          width="120"
-          height="120"
-        >
+    <div class="start-screen__card glass-card">
+      <div class="start-screen-avatar-frame">
+        <img src="images/nariella-avatar.png" alt="Нариелла" class="start-screen-avatar" width="120" height="120">
       </div>
       <h1 class="start-screen__title">Нариелла: Секрет здоровой тарелки</h1>
+      <p id="start-daily-quote" class="start-screen__quote"></p>
       <p class="start-screen__description">
-        Помоги Нариелле собрать идеальную тарелку! Перетаскивай продукты и создай сбалансированный обед по правилу здоровой тарелки.
+        Помоги Нариелле собрать идеальную тарелку! Перетаскивай продукты и создай сбалансированный обед.
       </p>
       <ul class="start-screen__rules">
         <li><span class="rule-dot rule-dot--veg"></span>50% овощей</li>
